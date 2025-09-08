@@ -36,6 +36,16 @@
             color: #BB86FC;
         }
 
+        .warning-message {
+            background-color: #B00020;
+            color: #FFFFFF;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
         .card-container {
             position: relative;
             width: 100%;
@@ -178,7 +188,10 @@
 </head>
 <body>
     <div class="container">
-        <h1>Mon Vocabulaire Anglais</h1>
+        <div class="warning-message">
+            <p>Le site peut contenir des erreurs car l'IA a été utilisée pour extraire les mots de vocabulaire. Utilisez le site uniquement afin de consolider vos bases et non pour étudier. La liste de vocabulaire ci-dessous liste tous les mots, les erreurs y sont donc présentes et certains mots sont manquants.</p>
+        </div>
+        <h1>Vocabulaire Anglais</h1>
         
         <div class="card-container">
             <div id="flashcard" class="card">
@@ -324,63 +337,50 @@
             ["Social security", "La sécurité sociale"],
             ["NHS", "Sécurité sociale britannique"],
             ["Letter of application", "Lettre de motivation"],
-            ["Interview", "Entretien d’embauche"],
-            ["CV", "CV"],
+            ["Job interview", "Entretien d’embauche"],
             ["Applicant", "Candidat"],
-            ["To possess", "Posséder"],
+            ["Weakness", "Faiblesse"],
             ["Strength", "Force"],
-            ["In your opinion", "À votre avis"],
-            ["To state", "Déclarer"],
-            ["To waffle", "Dire n’importe quoi"],
-            ["To talk about", "Parler à propos de"],
-            ["A subject", "Un sujet"],
-            ["To stick to the point", "S’en tenir à l’essentiel"],
+            ["In your opinion", "Selon vous/toi"],
+            ["Position", "Poste"],
+            ["To waffle", "Baratiner, parler pour ne rien dire"],
+            ["Concisely", "Succinctement, brièvement"],
+            ["To stick to the point", "Ne pas s'éloigner du sujet"],
             ["Lack", "Manque"],
-            ["Eagerness", "Enthousiasme"],
+            ["Keenness", "Enthousiasme"],
             ["To graduate", "Être diplômé"],
-            ["To land a job", "Trouver un emploi"],
-            ["To be on your own", "Être seul"],
-            ["To get on with", "S’entendre avec"],
-            ["To be keen to", "Tenir à, être désireux de"],
-            ["To gain experience", "Acquérir de l’expérience"],
+            ["To embark on", "Se lancer dans, entreprendre"],
+            ["To be keen to", "Avoir hâte de"],
+            ["Team-player", "Personne qui a l'esprit d'équipe"],
+            ["To gain experience", "Acquérir de l'expérience"],
             ["Field", "Domaine"],
             ["Personal details", "Données personnelles"],
-            ["Employment skills", "Compétences professionnelles"],
-            ["Interests, hobbys", "Intérêts, hobbies"],
-            ["Accurate", "Précis"],
-            ["Efficient", "Efficace"],
-            ["Sufficiently", "Suffisamment"],
+            ["Employment", "Emploi, expérience professionnelle"],
+            ["Skills", "Compétences"],
+            ["Interests", "Intérêts, hobbys"],
+            ["Proficient in", "Bonne maîtrise de"],
             ["Working knowledge", "Connaissances pratiques"],
-            ["To apply for", "Poser sa candidature pour"],
+            ["To apply for", "Postuler à"],
             ["Enclosed", "Ci-joint"],
-            ["Extensive", "Étoffé, étendu"],
+            ["Extensive", "Approfondi"],
             ["To put into practice", "Mettre en pratique"],
-            ["Convenience", "Commodité"],
-            ["Ters", "Bref, concis"],
-            ["To sidetrack", "Dévier, détourner"],
-            ["To jot down", "Noter rapidement"],
-            ["Neatly", "Proprement, clairement"],
-            ["To give sb a hard time", "Donner du fil à retordre à qqn"],
-            ["To giggle", "Pouffer de rire"],
-            ["To yawn", "Baîller"],
-            ["To ramble on", "Bavarder"],
-            ["To be off", "S’en aller"],
-            ["Cocky", "Arrogant"],
-            ["A shopkeeper", "Un commerçant"],
-            ["A baker", "Un boulanger"],
-            ["A confectioner", "Un confiseur"],
-            ["A butcher", "Un boucher"],
-            ["A grocer", "Un épicier"],
-            ["A greengrocer", "Un marchand de légumes"],
-            ["A dairyman, a milkman", "Un laitier"],
-            ["A fishmonger", "Un poissonnier"],
-            ["A caterer", "Un traiteur"],
+            ["Convenience", "Convenance"],
+            ["Ters", "Frousse"],
+            ["To sidetrack", "Détourner"],
+            ["To jot down", "Noter, griffonner"],
+            ["Neatly", "Soigneusement"],
+            ["To give sb a hard time", "Donner du fil à retordre, en faire baver à qqn"],
+            ["To giggle", "Glousser, rire bêtement"],
+            ["To yawn", "Bâiller"],
+            ["To ramble on", "Radoter"],
+            ["Cocky", "Prétentieux"],
+            ["Willing", "Prêt, disposé"],
             ["To retire", "Prendre sa retraite"],
             ["Retirement", "La retraite"],
             ["Wealth", "La richesse"],
             ["Poverty", "La pauvreté"],
             ["Legalislation", "La législation"],
-            ["Benefit", "L’avantage"],
+            ["Benefit", "L'avantage"],
             ["Skillful", "Habile"],
             ["Clumsy", "Maladroit"],
             ["Unemployed", "Chômeur"],
@@ -427,32 +427,20 @@
             ["Fortunately, they draw family allowances", "Heureusement, ils touchent des allocations familiales"]
         ];
 
-        let shuffledVocab = [...vocab];
-
-        // Fonction pour mélanger le tableau
-        function shuffle(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
-
-        function displayCard(cardIndex) {
-            frontFace.textContent = shuffledVocab[cardIndex][0];
-            backFace.textContent = shuffledVocab[cardIndex][1];
-            cardCounter.textContent = `${cardIndex + 1} / ${shuffledVocab.length}`;
+        function displayCard() {
+            frontFace.textContent = vocab[currentCardIndex][0];
+            backFace.textContent = vocab[currentCardIndex][1];
+            cardCounter.textContent = `${currentCardIndex + 1} / ${vocab.length}`;
             updateButtons();
         }
 
         function updateButtons() {
             prevBtn.disabled = currentCardIndex === 0;
-            nextBtn.disabled = currentCardIndex === shuffledVocab.length - 1;
+            nextBtn.disabled = currentCardIndex === vocab.length - 1;
         }
 
         function generateList() {
-            vocabularyList.innerHTML = ''; // Nettoyer la liste existante
-            vocab.forEach(pair => { // Utiliser le tableau non mélangé pour la liste
+            vocab.forEach(pair => {
                 const li = document.createElement('li');
                 li.textContent = `${pair[0]} - ${pair[1]}`;
                 vocabularyList.appendChild(li);
@@ -465,11 +453,11 @@
         });
 
         nextBtn.addEventListener('click', () => {
-            if (currentCardIndex < shuffledVocab.length - 1) {
+            if (currentCardIndex < vocab.length - 1) {
                 currentCardIndex++;
                 flashcard.classList.remove('flipped');
                 isFlipped = false;
-                setTimeout(() => displayCard(currentCardIndex), 300);
+                setTimeout(displayCard, 300);
             }
         });
 
@@ -478,13 +466,12 @@
                 currentCardIndex--;
                 flashcard.classList.remove('flipped');
                 isFlipped = false;
-                setTimeout(() => displayCard(currentCardIndex), 300);
+                setTimeout(displayCard, 300);
             }
         });
 
         document.addEventListener('DOMContentLoaded', () => {
-            shuffledVocab = shuffle(shuffledVocab);
-            displayCard(currentCardIndex);
+            displayCard();
             generateList();
         });
     </script>
