@@ -64,7 +64,6 @@
             box-shadow: 0 0 15px #03DAC6;
         }
         
-        /* Card Game Styles */
         .flashcard-game-container {
             display: none;
         }
@@ -214,7 +213,6 @@
             background-color: #D32F2F;
         }
 
-        /* Quiz Game Styles */
         .quiz-game-container {
             display: none;
             flex-direction: column;
@@ -284,7 +282,6 @@
             margin-bottom: 20px;
         }
 
-        /* Hangman Game Styles */
         .hangman-game-container {
             display: none;
             flex-direction: column;
@@ -377,7 +374,6 @@
             <button id="hangmanModeBtn">Mode Pendu</button>
         </div>
         
-       
         <div id="flashcardGameContainer" class="flashcard-game-container" style="display: block;">
             <div class="card-container">
                 <div id="flashcard" class="card">
@@ -397,14 +393,12 @@
             </div>
         </div>
 
-        
         <div id="quizGameContainer" class="quiz-game-container">
             <div id="quizScore" class="quiz-score">Score: 0 / 0</div>
             <div id="quizQuestion" class="quiz-question"></div>
             <div id="quizOptions" class="quiz-options"></div>
         </div>
 
-       
         <div id="hangmanGameContainer" class="hangman-game-container">
             <pre id="hangmanDrawing" class="hangman-drawing"></pre>
             <div id="hangmanWordDisplay" class="hangman-word-display"></div>
@@ -673,20 +667,15 @@
             ["They aren't rolling on it", "Ils ne roulent pas sur l'or"]
         ];
         
-      
-
-        
         let shuffledVocab = shuffle([...vocab]);
         let wordsToReview = [];
         let currentCardIndex = 0;
 
-        
         let quizScoreCount = 0;
         let quizTotalCount = 0;
         let quizQuestions = [];
         let currentQuizQuestionIndex = 0;
 
-        
         let hangmanWords = vocab.filter(pair => !pair[0].includes(' ') && !pair[0].includes(',') && pair[0].length > 3 && !pair[0].startsWith('To '));
         let hangmanWord = '';
         let guessedLetters = [];
@@ -759,7 +748,6 @@
             `
         ];
 
-        )
         function shuffle(array) {
             let currentIndex = array.length, randomIndex;
             while (currentIndex > 0) {
@@ -769,7 +757,6 @@
             }
             return array;
         }
-
 
         function showMode(mode) {
             flashcardGameContainer.style.display = 'none';
@@ -798,8 +785,6 @@
         quizModeBtn.addEventListener('click', () => showMode('quiz'));
         hangmanModeBtn.addEventListener('click', () => showMode('hangman'));
 
-
-   
         function displayFlashcard() {
             if (shuffledVocab.length === 0 && wordsToReview.length === 0) {
                 frontFace.textContent = "C'est fini pour aujourd'hui !";
@@ -810,7 +795,7 @@
             }
 
             let card;
-            if (wordsToReview.length > 0 && Math.random() < 0.5) { // 50% chance to review a difficult word
+            if (wordsToReview.length > 0 && Math.random() < 0.5) { 
                 const reviewIndex = Math.floor(Math.random() * wordsToReview.length);
                 card = wordsToReview[reviewIndex];
                 wordsToReview.splice(reviewIndex, 1);
@@ -886,7 +871,6 @@
             }
         });
 
-        
         function generateQuizQuestions() {
             quizQuestions = shuffle([...vocab]);
             quizScoreCount = 0;
@@ -959,9 +943,7 @@
             quizScore.textContent = `Score: ${quizScoreCount} / ${quizTotalCount}`;
         }
         
-        
         function startHangman() {
-        
             const filteredWords = vocab.filter(pair => {
                 const englishWord = pair[0].toLowerCase();
                 return !englishWord.includes(' ') && englishWord.length > 3 && !englishWord.includes('-') && !englishWord.startsWith('to ');
@@ -1055,7 +1037,6 @@
 
         hangmanRestartBtn.addEventListener('click', startHangman);
 
-     
         function generateList() {
             vocabularyList.innerHTML = '';
             vocab.forEach(pair => {
