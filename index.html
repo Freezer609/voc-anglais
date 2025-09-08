@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeu de Cartes de Vocabulaire</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #121212;
+            color: #E0E0E0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: #1E1E1E;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        h1 {
+            font-weight: 700;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #BB86FC;
+        }
+
+        .card-container {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            perspective: 1000px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5em;
+            font-weight: 700;
+            padding: 20px;
+            box-sizing: border-box;
+            word-wrap: break-word;
+            text-align: center;
+        }
+
+        .card-front {
+            background-color: #333333;
+            color: #FFFFFF;
+        }
+
+        .card-back {
+            background-color: #BB86FC;
+            color: #1E1E1E;
+            transform: rotateY(180deg);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        button {
+            background-color: #03DAC6;
+            color: #121212;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1em;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        button:hover {
+            background-color: #018786;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        button:disabled {
+            background-color: #444444;
+            color: #888888;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        #cardCounter {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #BB86FC;
+            background-color: #2C2C2C;
+            padding: 10px 15px;
+            border-radius: 8px;
+        }
+
+        .list-section, .instructions-section {
+            background-color: #2C2C2C;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: left;
+            margin-top: 30px;
+        }
+
+        .list-section h2, .instructions-section h2 {
+            font-size: 1.8em;
+            color: #03DAC6;
+            margin-bottom: 15px;
+        }
+
+        .vocabulary-list {
+            columns: 2;
+            column-gap: 40px;
+            font-size: 1em;
+            line-height: 1.6;
+        }
+        
+        .vocabulary-list li {
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            .card-face {
+                font-size: 1.2em;
+            }
+            .controls {
+                flex-direction: column;
+            }
+            button {
+                width: 100%;
+            }
+            .vocabulary-list {
+                columns: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mon Vocabulaire Anglais</h1>
+        
+        <div class="card-container">
+            <div id="flashcard" class="card">
+                <div id="front" class="card-face card-front"></div>
+                <div id="back" class="card-face card-back"></div>
+            </div>
+        </div>
+        <div class="controls">
+            <button id="prevBtn" disabled>&larr; Précédent</button>
+            <span id="cardCounter"></span>
+            <button id="nextBtn">Suivant &rarr;</button>
+        </div>
+
+        <div class="list-section">
+            <h2>Liste Complète</h2>
+            <ul class="vocabulary-list">
+            </ul>
+        </div>
+
+        <div class="instructions-section">
+            <h2>Comment utiliser</h2>
+            <p>
+                - Clique sur la carte pour voir la traduction.<br>
+                - Utilise les boutons "Précédent" et "Suivant" pour naviguer.<br>
+                - La liste complète est disponible en bas de page pour réviser à tout moment.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const flashcard = document.getElementById('flashcard');
+        const frontFace = document.getElementById('front');
+        const backFace = document.getElementById('back');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const cardCounter = document.getElementById('cardCounter');
+        const vocabularyList = document.querySelector('.vocabulary-list');
+        
+        let currentCardIndex = 0;
+        let isFlipped = false;
+
+        const vocab = [
+            ["A wine merchant", "Un marchand de vin"],
+            ["A poulterer", "Un volailler"],
+            ["A fishmonger", "Un poissonnier"],
+            ["A florist", "Un fleuriste"],
+            ["A butcher", "Un boucher"],
+            ["A launderer", "Un blanchisseur"],
+            ["A furniture dealer", "Un marchand de meubles"],
+            ["An antique dealer", "Un antiquaire"],
+            ["A second-hand dealer", "Un brocanteur"],
+            ["A hairdresser", "Un coiffeur"],
+            ["An undertaker", "Un entrepreneur de pompes funèbres"],
+            ["A worker, workman", "Un ouvrier"],
+            ["A craftsman", "Un artisan"],
+            ["A tailor", "Un couturier"],
+            ["A painter", "Un peintre"],
+            ["A plumber", "Un plombier"],
+            ["A mason, a bricklayer", "Un maçon, un briquetier"],
+            ["A plasterer", "Un plâtrier"],
+            ["A glazier", "Un vitrier"],
+            ["A joiner", "Un menuisier"],
+            ["A blacksmith", "Un forgeron"],
+            ["An electrician", "Un électricien"],
+            ["A locksmith", "Un serrurier"],
+            ["A shoemaker", "Un cordonnier"],
+            ["A window cleaner", "Un laveur de vitre"],
+            ["A postman", "Un facteur"],
+            ["A foreman", "Un contremaître"],
+            ["A policeman", "Un pompier"],
+            ["A dustman", "Un éboueur"],
+            ["A gardener", "Un jardinier"],
+            ["A gamekeeper", "Un garde-chasse"],
+            ["A farmer", "Un fermier"],
+            ["A waiter, a waitress", "Un serveur, une serveuse"],
+            ["A barman, a barmaid", "Un(e) barman (-aid)"],
+            ["A housemaid", "Une bonne"],
+            ["A cook", "Un cuisinier, Cuisiner"],
+            ["A mechanic", "Un mécanicien"],
+            ["A guard", "Un gardien"],
+            ["A warden", "Un gardien"],
+            ["A driving-instructor", "Un moniteur d’auto-école"],
+            ["A bus driver", "Un chauffeur de bus"],
+            ["A lorry-driver", "Un chauffeur de camion"],
+            ["A taxi-driver", "Un chauffeur de taxi"],
+            ["A pickpocket", "Un voleur à la tire"],
+            ["A controller", "Un contrôleur"],
+            ["A furniture remover", "Un déménageur"],
+            ["An inspector", "Un inspecteur"],
+            ["A postman", "Un postier"],
+            ["A detective", "Un détective"],
+            ["A receptionist", "Un(e) réceptionniste"],
+            ["A pilot", "Un pilote"],
+            ["An air-hostess", "Une hôtesse de l’air"],
+            ["A sailor", "Un marin"],
+            ["A guide", "Un guide"],
+            ["A photographer", "Un photographe"],
+            ["A tax-collector", "Un percepteur"],
+            ["A civil servant", "Un fonctionnaire"],
+            ["A designer", "Un designer"],
+            ["A judge", "Un juge"],
+            ["A lawyer, a barrister", "Un avocat"],
+            ["A notary", "Un notaire"],
+            ["A doctor", "Un médecin"],
+            ["A surgeon", "Un chirurgien"],
+            ["A dentist", "Un dentiste"],
+            ["A chemist", "Un pharmacien"],
+            ["An optician", "Un opticien"],
+            ["An oculist", "Un oculiste"],
+            ["A specialist", "Un spécialiste"],
+            ["A scientist", "Un scientifique"],
+            ["An artist", "Un artiste"],
+            ["A veterinarian", "Un vétérinaire"],
+            ["A purse", "Un sac à main"],
+            ["A vet", "Un vétérinaire"],
+            ["A writer", "Un écrivain"],
+            ["A playwright", "Un dramaturge"],
+            ["A editor", "Un rédacteur en chef"],
+            ["A printer", "Un imprimeur"],
+            ["A journalist", "Un journaliste"],
+            ["An artist", "Un artiste"],
+            ["A musician", "Un musicien"],
+            ["A conductor", "Un chef d’orchestre"],
+            ["A singer", "Un chanteur"],
+            ["An actor, an actress", "Un acteur, une actrice"],
+            ["A dancer", "Un danseur"],
+            ["A prompter", "Un souffleur"],
+            ["A typist", "Une dactylo"],
+            ["A clerk", "Un employé de bureau"],
+            ["An engineer", "Un ingénieur"],
+            ["An accountant", "Un comptable"],
+            ["An executive", "Un cadre, un administrateur"],
+            ["A manager", "Un directeur"],
+            ["A CEO, Chief Executive Officer", "Un directeur général"],
+            ["A politician", "Un homme politique"],
+            ["A president", "Un président"],
+            ["A colleague", "Un collègue"],
+            ["A pal", "Un copain"],
+            ["A workmate", "Un camarade de travail"],
+            ["A rise", "Une augmentation"],
+            ["The salary", "Le salaire"],
+            ["The wages", "Les salaires, les gages"],
+            ["The taxes", "Les impôts"],
+            ["A trade-union", "Un syndicat"],
+            ["A wage-earner", "Un salarié"],
+            ["A strike", "Une grève"],
+            ["To go on strike", "Se mettre en grève"],
+            ["Social security", "La sécurité sociale"],
+            ["NHS", "Sécurité sociale britannique"],
+            ["Letter of application", "Lettre de motivation"],
+            ["Interview", "Entretien d’embauche"],
+            ["CV", "CV"],
+            ["Applicant", "Candidat"],
+            ["To possess", "Posséder"],
+            ["Strength", "Force"],
+            ["In your opinion", "À votre avis"],
+            ["To state", "Déclarer"],
+            ["To waffle", "Dire n’importe quoi"],
+            ["To talk about", "Parler à propos de"],
+            ["A subject", "Un sujet"],
+            ["To stick to the point", "S’en tenir à l’essentiel"],
+            ["Lack", "Manque"],
+            ["Eagerness", "Enthousiasme"],
+            ["To graduate", "Être diplômé"],
+            ["To land a job", "Trouver un emploi"],
+            ["To be on your own", "Être seul"],
+            ["To get on with", "S’entendre avec"],
+            ["To be keen to", "Tenir à, être désireux de"],
+            ["To gain experience", "Acquérir de l’expérience"],
+            ["Field", "Domaine"],
+            ["Personal details", "Données personnelles"],
+            ["Employment skills", "Compétences professionnelles"],
+            ["Interests, hobbys", "Intérêts, hobbies"],
+            ["Accurate", "Précis"],
+            ["Efficient", "Efficace"],
+            ["Sufficiently", "Suffisamment"],
+            ["Working knowledge", "Connaissances pratiques"],
+            ["To apply for", "Poser sa candidature pour"],
+            ["Enclosed", "Ci-joint"],
+            ["Extensive", "Étoffé, étendu"],
+            ["To put into practice", "Mettre en pratique"],
+            ["Convenience", "Commodité"],
+            ["Ters", "Bref, concis"],
+            ["To sidetrack", "Dévier, détourner"],
+            ["To jot down", "Noter rapidement"],
+            ["Neatly", "Proprement, clairement"],
+            ["To give sb a hard time", "Donner du fil à retordre à qqn"],
+            ["To giggle", "Pouffer de rire"],
+            ["To yawn", "Baîller"],
+            ["To ramble on", "Bavarder"],
+            ["To be off", "S’en aller"],
+            ["Cocky", "Arrogant"],
+            ["A shopkeeper", "Un commerçant"],
+            ["A baker", "Un boulanger"],
+            ["A confectioner", "Un confiseur"],
+            ["A butcher", "Un boucher"],
+            ["A grocer", "Un épicier"],
+            ["A greengrocer", "Un marchand de légumes"],
+            ["A dairyman, a milkman", "Un laitier"],
+            ["A fishmonger", "Un poissonnier"],
+            ["A caterer", "Un traiteur"],
+            ["To retire", "Prendre sa retraite"],
+            ["Retirement", "La retraite"],
+            ["Wealth", "La richesse"],
+            ["Poverty", "La pauvreté"],
+            ["Legalislation", "La législation"],
+            ["Benefit", "L’avantage"],
+            ["Skillful", "Habile"],
+            ["Clumsy", "Maladroit"],
+            ["Unemployed", "Chômeur"],
+            ["On the dole", "Au chômage"],
+            ["Wealthy, rich", "Riche"],
+            ["Poor, broke", "Pauvre, fauché"],
+            ["To inherit", "Hériter"],
+            ["To transfer", "Transférer"],
+            ["To keep up with", "Se maintenir au niveau de"],
+            ["To be busy", "Être occupé"],
+            ["To practise", "S’entraîner"],
+            ["To train", "S’entraîner"],
+            ["To undertake", "Entreprendre"],
+            ["To manage", "Gérer"],
+            ["To decrease", "Diminuer"],
+            ["To increase", "Augmenter"],
+            ["To work overtime", "Faire des heures supplémentaires"],
+            ["To earn money", "Gagner de l’argent"],
+            ["To get a rise", "Avoir une augmentation"],
+            ["To have a rise", "Avoir une augmentation"],
+            ["To trust", "Avoir confiance"],
+            ["To congratulate", "Féliciter"],
+            ["To dismiss", "Congédier"],
+            ["To resign", "Démissionner"],
+            ["To pay taxes", "Payer des impôts"],
+            ["To take a day off", "Prendre un jour de congé"],
+            ["Does he have a trade?", "Exerce-t-il une profession?"],
+            ["It opens the door to any career", "Cela ouvre la porte à n’importe quelle carrière"],
+            ["Hands wanted", "On embauche"],
+            ["They’re over-staffed", "Ils ont trop de personnel"],
+            ["His boss has given him a week’s notice", "Son patron lui a donné un préavis d’une semaine"],
+            ["I have earned it by the sweat of my brow", "Je l’ai gagné à la sueur de mon front"],
+            ["He had an accident at work last month", "Il a eu un accident au travail le mois dernier"],
+            ["He’d like to enjoy the fruits of his labour", "Il voudrait profiter du fruit de son labeur"],
+            ["They should raise the minimum basic wage", "Ils devraient augmenter le salaire minimum"],
+            ["They are rolling in it", "Ils roulent sur l’or"],
+            ["He’s a bit short of money", "Il est un peu à court d’argent"],
+            ["Don’t throw the money out the window", "Ne jette pas l’argent par les fenêtres"],
+            ["They get starvation wages", "Ils ont des salaires de misère"],
+            ["We’d better join a trade-union", "On ferait mieux de se syndiquer"],
+            ["They’re going to stage a general strike", "Ils vont déclencher une grève générale"],
+            ["He is on the dole", "Il est au chômage"],
+            ["Are you sure he’ll get the old-age pension?", "Es-tu sûr qu’il touchera l’allocation vieillesse?"],
+            ["Fortunately, they draw family allowances", "Heureusement, ils touchent des allocations familiales"]
+        ];
+
+        function displayCard() {
+            frontFace.textContent = vocab[currentCardIndex][0];
+            backFace.textContent = vocab[currentCardIndex][1];
+            cardCounter.textContent = `${currentCardIndex + 1} / ${vocab.length}`;
+            updateButtons();
+        }
+
+        function updateButtons() {
+            prevBtn.disabled = currentCardIndex === 0;
+            nextBtn.disabled = currentCardIndex === vocab.length - 1;
+        }
+
+        function generateList() {
+            vocab.forEach(pair => {
+                const li = document.createElement('li');
+                li.textContent = `${pair[0]} - ${pair[1]}`;
+                vocabularyList.appendChild(li);
+            });
+        }
+
+        flashcard.addEventListener('click', () => {
+            flashcard.classList.toggle('flipped');
+            isFlipped = !isFlipped;
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentCardIndex < vocab.length - 1) {
+                currentCardIndex++;
+                flashcard.classList.remove('flipped');
+                isFlipped = false;
+                setTimeout(displayCard, 300);
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentCardIndex > 0) {
+                currentCardIndex--;
+                flashcard.classList.remove('flipped');
+                isFlipped = false;
+                setTimeout(displayCard, 300);
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            displayCard();
+            generateList();
+        });
+    </script>
+</body>
+</html>
