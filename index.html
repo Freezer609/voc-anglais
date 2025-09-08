@@ -277,22 +277,17 @@
             ["A guide", "Un guide"],
             ["A photographer", "Un photographe"],
             ["A tax-collector", "Un percepteur"],
-            ["A civil servant", "Un fonctionnaire"],
-            ["A designer", "Un designer"],
+            ["A customs officer", "Un douanier"],
             ["A judge", "Un juge"],
             ["A lawyer, a barrister", "Un avocat"],
-            ["A notary", "Un notaire"],
+            ["A solicitor", "Un notaire"],
             ["A doctor", "Un médecin"],
             ["A surgeon", "Un chirurgien"],
-            ["A dentist", "Un dentiste"],
             ["A chemist", "Un pharmacien"],
-            ["An optician", "Un opticien"],
+            ["A dentist", "Un dentiste"],
             ["An oculist", "Un oculiste"],
             ["A specialist", "Un spécialiste"],
             ["A scientist", "Un scientifique"],
-            ["An artist", "Un artiste"],
-            ["A veterinarian", "Un vétérinaire"],
-            ["A purse", "Un sac à main"],
             ["A vet", "Un vétérinaire"],
             ["A writer", "Un écrivain"],
             ["A playwright", "Un dramaturge"],
@@ -432,20 +427,32 @@
             ["Fortunately, they draw family allowances", "Heureusement, ils touchent des allocations familiales"]
         ];
 
-        function displayCard() {
-            frontFace.textContent = vocab[currentCardIndex][0];
-            backFace.textContent = vocab[currentCardIndex][1];
-            cardCounter.textContent = `${currentCardIndex + 1} / ${vocab.length}`;
+        let shuffledVocab = [...vocab];
+
+        // Fonction pour mélanger le tableau
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function displayCard(cardIndex) {
+            frontFace.textContent = shuffledVocab[cardIndex][0];
+            backFace.textContent = shuffledVocab[cardIndex][1];
+            cardCounter.textContent = `${cardIndex + 1} / ${shuffledVocab.length}`;
             updateButtons();
         }
 
         function updateButtons() {
             prevBtn.disabled = currentCardIndex === 0;
-            nextBtn.disabled = currentCardIndex === vocab.length - 1;
+            nextBtn.disabled = currentCardIndex === shuffledVocab.length - 1;
         }
 
         function generateList() {
-            vocab.forEach(pair => {
+            vocabularyList.innerHTML = ''; // Nettoyer la liste existante
+            vocab.forEach(pair => { // Utiliser le tableau non mélangé pour la liste
                 const li = document.createElement('li');
                 li.textContent = `${pair[0]} - ${pair[1]}`;
                 vocabularyList.appendChild(li);
@@ -458,11 +465,11 @@
         });
 
         nextBtn.addEventListener('click', () => {
-            if (currentCardIndex < vocab.length - 1) {
+            if (currentCardIndex < shuffledVocab.length - 1) {
                 currentCardIndex++;
                 flashcard.classList.remove('flipped');
                 isFlipped = false;
-                setTimeout(displayCard, 300);
+                setTimeout(() => displayCard(currentCardIndex), 300);
             }
         });
 
@@ -471,12 +478,13 @@
                 currentCardIndex--;
                 flashcard.classList.remove('flipped');
                 isFlipped = false;
-                setTimeout(displayCard, 300);
+                setTimeout(() => displayCard(currentCardIndex), 300);
             }
         });
 
         document.addEventListener('DOMContentLoaded', () => {
-            displayCard();
+            shuffledVocab = shuffle(shuffledVocab);
+            displayCard(currentCardIndex);
             generateList();
         });
     </script>
