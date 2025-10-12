@@ -361,7 +361,6 @@ function startFlashcardGame() {
 
     shuffledVocab = shuffleArray([...vocab]);
     currentCardIndex = 0;
-    masteredWords = new Set();
     displayCard();
 }
 
