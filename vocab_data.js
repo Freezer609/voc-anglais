@@ -328,7 +328,7 @@ const ALL_VOCAB_DATA = {
     ["stay true to yourself", "reste fidèle à toi-même"],
     ["lunch coupons", "check repas"],
     ["to be decent", "être convenable (avoir un niveau correct)"],
-    ["to be proud of", "être passionné de"],
+    ["to be fond of", "être passionné de"],
     ["I'm keen on + verb-ing", "être intéressé par"],
     ["efficient", "efficace"],
     ["to be picky", "être difficile, pointilleux"],
