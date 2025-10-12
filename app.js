@@ -63,7 +63,9 @@ const categoryModal = document.getElementById('categoryModal');
 const modalTitle = document.getElementById('modalTitle');
 const modalButtons = document.getElementById('modalButtons');
 
-
+const totalWordsCountSpan = document.getElementById('totalWordsCount');
+const masteredWordsCountSpan = document.getElementById('masteredWordsCount');
+const progressPercentageSpan = document.getElementById('progressPercentage');
 
 const varCss = {
     colorCorrect: getComputedStyle(document.documentElement).getPropertyValue('--color-correct').trim(),

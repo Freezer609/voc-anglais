@@ -24,6 +24,7 @@
             <button id="scrambleModeBtn" title="Mode Réarrangement"><i class="fas fa-random"></i> Mots Mélangés</button>
             <button id="dictationModeBtn" title="Mode Dictée"><i class="fas fa-keyboard"></i> Mode Dictée</button>
             <button id="matchModeBtn" title="Mode Match"><i class="fas fa-link"></i> Mode Association</button>
+            <button id="smartReviewModeBtn" title="Mode Révision Intelligente"><i class="fas fa-brain"></i> Révision Intelligente</button>
         </div>
 
         <div id="flashcardGameContainer" class="game-container active-mode" style="display: flex; opacity: 1;">
@@ -91,6 +92,23 @@
                 <div id="definitionsColumn" class="match-column"></div>
             </div>
             <button id="matchNextBtn" style="display:none; margin-top: 30px;">Prochain Match &rarr;</button>
+        </div>
+
+        <div id="smartReviewGameContainer" class="game-container">
+            <div class="card-container">
+                <div id="smartReviewFlashcard" class="card">
+                    <div id="smartReviewFront" class="card-face card-front">Sélectionnez un chapitre ci-dessus</div>
+                    <div id="smartReviewBack" class="card-face card-back">Puis une section pour commencer la révision intelligente.</div>
+                </div>
+            </div>
+            <div class="controls"> 
+                <span id="smartReviewCardCounter"></span>
+            </div>
+            <div class="feedback-buttons" id="smartReviewFeedbackButtons">
+                <button class="knew-it-btn" id="smartReviewKnewItBtn">Je l'avais</button>
+                <button class="mastered-btn" id="smartReviewMasteredBtn">Mot totalement maîtrisé</button>
+                <button class="didnt-know-it-btn" id="smartReviewDidntKnowBtn">Je ne l'avais pas</button>
+            </div>
         </div>
 
         <details id="masteredWordsSection">
