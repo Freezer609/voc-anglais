@@ -1257,3 +1257,11 @@ details[open] summary::after {
     margin: 0;
     color: #FFFFFF; /* Texte blanc pour un meilleur contraste sur le gris */
 }
+
+.no-mastered-words-message {
+    font-style: italic;
+    color: #AAAAAA;
+    margin-top: 15px;
+    text-align: center;
+    font-size: 0.9em;
+}

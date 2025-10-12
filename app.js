@@ -210,7 +210,7 @@ function updateProgressStatistics() {
 function updateMasteredWordsDisplay() {
     masteredWordsList.innerHTML = '';
     if (masteredWords.size === 0) {
-        masteredWordsList.innerHTML = '<li>Aucun mot maîtrisé pour le moment.</li>';
+        masteredWordsList.innerHTML = '<p class="no-mastered-words-message">Aucun mot maîtrisé pour le moment.</p>';
         resetMasteredBtn.style.display = 'none';
         return;
     }
