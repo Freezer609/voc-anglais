@@ -1077,3 +1077,83 @@ details[open] summary::after {
     transform: scale(1.2);
     color: #FF0000;
 }
+
+.list-content p {
+    margin-bottom: 8px;
+    font-size: 1em;
+    color: var(--color-text);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.list-content p span {
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+#adminPanelModal .modal-content {
+    max-width: 800px;
+}
+
+#vocabDataEditor {
+    resize: vertical;
+    min-height: 300px;
+}
+
+#adminPanelModal .modal-buttons {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#adminPanelModal .modal-buttons button {
+    width: auto;
+    flex-grow: 1;
+    margin: 5px;
+    padding: 10px 20px;
+}
+
+#adminPanelModal .modal-buttons #closeAdminPanelBtn {
+    background: linear-gradient(135deg, var(--color-incorrect) 0%, #D32F2F 100%);
+    color: #FFFFFF;
+    box-shadow: 0 4px 15px rgba(244, 67, 54, 0.4);
+}
+
+#adminPanelModal .modal-buttons #closeAdminPanelBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(244, 67, 54, 0.6);
+}
+
+#adminPanelModal .modal-buttons #saveVocabDataBtn {
+    background: linear-gradient(135deg, var(--color-correct) 0%, #388E3C 100%);
+    color: #FFFFFF;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+}
+
+#adminPanelModal .modal-buttons #saveVocabDataBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
+}
+
+#adminPanelModal .modal-buttons #importVocabBtn {
+    background: linear-gradient(135deg, var(--color-primary) 0%, #9966CC 100%);
+    color: #FFFFFF;
+    box-shadow: 0 4px 15px rgba(187, 134, 252, 0.4);
+}
+
+#adminPanelModal .modal-buttons #importVocabBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(187, 134, 252, 0.6);
+}
+
+#adminPanelModal .modal-buttons #exportVocabBtn {
+    background: linear-gradient(135deg, var(--color-secondary) 0%, #018786 100%);
+    color: #FFFFFF;
+    box-shadow: 0 4px 15px rgba(3, 218, 198, 0.4);
+}
+
+#adminPanelModal .modal-buttons #exportVocabBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(3, 218, 198, 0.6);
+}

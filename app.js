@@ -63,6 +63,21 @@ const categoryModal = document.getElementById('categoryModal');
 const modalTitle = document.getElementById('modalTitle');
 const modalButtons = document.getElementById('modalButtons');
 
+const totalWordsCountSpan = document.getElementById('totalWordsCount');
+const masteredWordsCountSpan = document.getElementById('masteredWordsCount');
+const progressPercentageSpan = document.getElementById('progressPercentage');
+
+const adminPanelBtn = document.getElementById('adminPanelBtn');
+
+const adminPanelModal = document.getElementById('adminPanelModal');
+const vocabDataEditor = document.getElementById('vocabDataEditor');
+const saveVocabDataBtn = document.getElementById('saveVocabDataBtn');
+const importVocabFile = document.getElementById('importVocabFile');
+const importVocabBtn = document.getElementById('importVocabBtn');
+const exportVocabBtn = document.getElementById('exportVocabBtn');
+const revealAnswerBtn = document.getElementById('revealAnswerBtn');
+const closeAdminPanelBtn = document.getElementById('closeAdminPanelBtn');
+
 const varCss = {
     colorCorrect: getComputedStyle(document.documentElement).getPropertyValue('--color-correct').trim(),
     colorIncorrect: getComputedStyle(document.documentElement).getPropertyValue('--color-incorrect').trim(),
@@ -170,6 +185,28 @@ function hideAlert() {
     alertMessageDiv.style.display = 'none';
 }
 
+function updateProgressStatistics() {
+    let totalWordsInCurrentChapter = 0;
+    if (currentChapterKey && currentSubcategoryKey && ALL_VOCAB_DATA[currentChapterKey] && ALL_VOCAB_DATA[currentChapterKey].subcategories[currentSubcategoryKey]) {
+        totalWordsInCurrentChapter = ALL_VOCAB_DATA[currentChapterKey].subcategories[currentSubcategoryKey].data.length;
+    }
+
+    let masteredWordsInCurrentChapter = 0;
+    if (currentChapterKey && currentSubcategoryKey && ALL_VOCAB_DATA[currentChapterKey] && ALL_VOCAB_DATA[currentChapterKey].subcategories[currentSubcategoryKey]) {
+        const fullVocabForChapter = ALL_VOCAB_DATA[currentChapterKey].subcategories[currentSubcategoryKey].data;
+        masteredWordsInCurrentChapter = fullVocabForChapter.filter(pair => masteredWords.has(pair[0])).length;
+    }
+
+    totalWordsCountSpan.textContent = totalWordsInCurrentChapter;
+    masteredWordsCountSpan.textContent = masteredWordsInCurrentChapter;
+
+    let percentage = 0;
+    if (totalWordsInCurrentChapter > 0) {
+        percentage = Math.round((masteredWordsInCurrentChapter / totalWordsInCurrentChapter) * 100);
+    }
+    progressPercentageSpan.textContent = `${percentage}%`;
+}
+
 function updateMasteredWordsDisplay() {
     masteredWordsList.innerHTML = '';
     if (masteredWords.size === 0) {
@@ -191,6 +228,7 @@ function updateMasteredWordsDisplay() {
             masteredWords.delete(wordToRemove);
             saveMasteredWords();
             updateMasteredWordsDisplay();
+            updateProgressStatistics();
             displayAlert(`'${wordToRemove}' a été retiré des mots maîtrisés.`, varCss.colorPrimary);
             // Restart current game mode to reflect changes
             if (currentChapterKey && currentSubcategoryKey) {
@@ -205,6 +243,7 @@ function handleMasteredWord() {
     masteredWords.add(currentWord);
     saveMasteredWords();
     updateMasteredWordsDisplay();
+    updateProgressStatistics();
     displayAlert(`'${currentWord}' a été marqué comme maîtrisé et ne réapparaîtra plus.`, varCss.colorPrimary);
 
     // Proceed to the next card, similar to handleFeedback
@@ -294,6 +333,7 @@ function changeVocabulary(chapterKey, subcategoryKey) {
     }
 
     generateList();
+    updateProgressStatistics();
     startFlashcardGame();
 }
 
@@ -362,8 +402,12 @@ function handleFeedback(known) {
     
     if (known) {
         masteredWords.add(currentWord);
+        saveMasteredWords();
+        updateProgressStatistics();
     } else {
         masteredWords.delete(currentWord);
+        saveMasteredWords();
+        updateProgressStatistics();
         
         const wordToReinsert = shuffledVocab.splice(currentCardIndex, 1)[0];
         let insertIndex = currentCardIndex + Math.floor(Math.random() * (shuffledVocab.length - currentCardIndex)) + 1;
@@ -858,6 +902,7 @@ resetMasteredBtn.addEventListener('click', () => {
         masteredWords.clear();
         saveMasteredWords();
         updateMasteredWordsDisplay();
+        updateProgressStatistics();
         displayAlert("Tous les mots maîtrisés ont été réinitialisés.", varCss.colorPrimary);
         // Restart current game mode to reflect changes
         if (currentChapterKey && currentSubcategoryKey) {
@@ -870,6 +915,7 @@ document.addEventListener('DOMContentLoaded', () => {
     generateChapterButtons();
     hideAlert();
     updateMasteredWordsDisplay();
+    updateProgressStatistics();
     
     frontFace.textContent = "Sélectionnez un chapitre ci-dessus";
     backFace.textContent = "Puis une section pour commencer à jouer.";
@@ -881,10 +927,129 @@ window.unlockAdminBridge = function(key) {
     if (key === ADMIN_SECRET_KEY) {
         console.log("%c🔑 Clé Administrateur acceptée. Le pont admin est prêt. Les données sont exposées sur window.adminData.", "color: #03DAC6; font-weight: bold;");
         window.adminData = ALL_VOCAB_DATA;
+        adminPanelBtn.style.display = 'block'; // Show the admin button
     } else {
         console.error("Clé secrète incorrecte.");
     }
 };
+
+adminPanelBtn.addEventListener('click', openAdminPanel);
+
+function openAdminPanel() {
+    adminPanelModal.style.display = 'flex';
+    vocabDataEditor.value = JSON.stringify(ALL_VOCAB_DATA, null, 2);
+}
+
+function closeAdminPanel() {
+    adminPanelModal.style.display = 'none';
+}
+
+
+async function saveVocabDataToFile() {
+    try {
+        const newVocabData = JSON.parse(vocabDataEditor.value);
+        // Basic validation: check if it has the expected structure
+        if (typeof newVocabData !== 'object' || newVocabData === null) {
+            alert("Erreur: Le format du vocabulaire est incorrect. Doit être un objet JSON.");
+            return;
+        }
+        // This is a critical command that modifies the file system.
+        // It will overwrite the vocab_data.js file with the new JSON content.
+        // Please ensure the JSON is valid before proceeding.
+        const response = await default_api.write_file(
+            "C:\\Users\\gosse\\gemini stockage\\modif voc anglais 12-10-25\\réorganisation interne du code\\vocab_data.js",
+            `const ALL_VOCAB_DATA = ${JSON.stringify(newVocabData, null, 4)};`
+        );
+        console.log(response);
+        alert("Vocabulaire sauvegardé avec succès ! Le site va se recharger.");
+        location.reload(); // Reload the page to apply new vocabulary
+    } catch (e) {
+        alert("Erreur lors de la sauvegarde du vocabulaire: " + e.message);
+        console.error("Save error:", e);
+    }
+}
+
+function exportVocabData() {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(ALL_VOCAB_DATA, null, 2));
+    const downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", "vocab_data.json");
+    document.body.appendChild(downloadAnchorNode);
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+}
+
+function importVocabData() {
+    importVocabFile.click(); // Trigger the hidden file input
+}
+
+importVocabFile.addEventListener('change', async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+        try {
+            const fileContent = e.target.result;
+            const newVocabData = JSON.parse(fileContent);
+            // Basic validation
+            if (typeof newVocabData !== 'object' || newVocabData === null) {
+                alert("Erreur: Le format du fichier importé est incorrect. Doit être un objet JSON.");
+                return;
+            }
+            // This is a critical command that modifies the file system.
+            // It will overwrite the vocab_data.js file with the new JSON content.
+            // Please ensure the JSON is valid before proceeding.
+            const response = await default_api.write_file(
+                "C:\\Users\\gosse\\gemini stockage\\modif voc anglais 12-10-25\\réorganisation interne du code\\vocab_data.js",
+                `const ALL_VOCAB_DATA = ${JSON.stringify(newVocabData, null, 4)};`
+            );
+            console.log(response);
+            alert("Vocabulaire importé et sauvegardé avec succès ! Le site va se recharger.");
+            location.reload(); // Reload the page to apply new vocabulary
+        } catch (error) {
+            alert("Erreur lors de l'importation du vocabulaire: " + error.message);
+            console.error("Import error:", error);
+        }
+    };
+    reader.readAsText(file);
+});
+
+saveVocabDataBtn.addEventListener('click', saveVocabDataToFile);
+exportVocabBtn.addEventListener('click', exportVocabData);
+importVocabBtn.addEventListener('click', importVocabData);
+closeAdminPanelBtn.addEventListener('click', closeAdminPanel);
+
+function revealAnswer() {
+    let answer = "Aucune réponse disponible pour le mode de jeu actuel ou aucun jeu actif.";
+
+    if (flashcardGameContainer.classList.contains('active-mode')) {
+        if (shuffledVocab.length > 0 && currentCardIndex < shuffledVocab.length) {
+            answer = `Flashcard: ${shuffledVocab[currentCardIndex][0]} - ${shuffledVocab[currentCardIndex][1]}`;
+        }
+    } else if (quizGameContainer.classList.contains('active-mode')) {
+        if (quizQuestions.length > 0 && currentQuizQuestionIndex < quizQuestions.length) {
+            answer = `Quiz: ${quizQuestions[currentQuizQuestionIndex].correctAnswer}`;
+        }
+    } else if (hangmanGameContainer.classList.contains('active-mode')) {
+        if (hangmanWord) {
+            answer = `Pendu: ${hangmanWord}`;
+        }
+    } else if (scrambleGameContainer.classList.contains('active-mode')) {
+        if (currentScrambleWord) {
+            answer = `Mots Mélangés: ${currentScrambleWord}`;
+        }
+    } else if (dictationGameContainer.classList.contains('active-mode')) {
+        if (currentDictationAnswers.length > 0) {
+            answer = `Dictée: ${currentDictationAnswers.join(' / ')}`;
+        }
+    } else if (matchGameContainer.classList.contains('active-mode')) {
+        answer = "Le mode Association n'a pas de réponse unique à révéler.";
+    }
+    alert(answer);
+}
+
+revealAnswerBtn.addEventListener('click', revealAnswer);
 
 function trackEvent(eventName) {
 

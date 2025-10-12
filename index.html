@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -12,6 +11,7 @@
 <body>
     <div class="container">
         <h1 id="mainTitle">Vocabulaire Anglais</h1>
+        <button id="adminPanelBtn" style="display: none; margin-top: 10px;" class="reset-btn">Panneau Admin</button>
         <div id="chapterSelector" class="chapter-selector">
         </div>
         <div id="alertMessage" class="alert-message">
@@ -101,6 +101,23 @@
             </div>
         </details>
 
+        <details id="masteredWordsSection">
+            <summary>Gérer les mots maîtrisés</summary>
+            <div class="list-content">
+                <ul id="masteredWordsList" class="vocabulary-list"></ul>
+                <button id="resetMasteredBtn" class="reset-btn">Tout Réinitialiser</button>
+            </div>
+        </details>
+
+        <details>
+            <summary>Statistiques de Progression</summary>
+            <div class="list-content">
+                <p>Mots Totaux : <span id="totalWordsCount">0</span></p>
+                <p>Mots Maîtrisés : <span id="masteredWordsCount">0</span></p>
+                <p>Progression : <span id="progressPercentage">0%</span></p>
+            </div>
+        </details>
+
         <details>
             <summary id="listTitle">Liste Complète</summary>
             <div class="list-content">
@@ -128,6 +145,21 @@
         <div class="modal-content">
             <h3 id="modalTitle"></h3>
             <div id="modalButtons" class="modal-buttons">
+            </div>
+        </div>
+    </div>
+
+    <div id="adminPanelModal" class="modal">
+        <div class="modal-content">
+            <h3>Panneau d'Administration</h3>
+            <textarea id="vocabDataEditor" rows="20" style="width: 100%; margin-bottom: 15px; background-color: #333; color: #eee; border: 1px solid #555; padding: 10px; font-family: monospace;"></textarea>
+            <div class="modal-buttons">
+                <button id="saveVocabDataBtn">Sauvegarder Vocabulaire</button>
+                <input type="file" id="importVocabFile" accept=".js" style="display: none;">
+                <button id="importVocabBtn">Importer Vocabulaire</button>
+                <button id="exportVocabBtn">Exporter Vocabulaire</button>
+                <button id="revealAnswerBtn">Révéler la réponse</button>
+                <button id="closeAdminPanelBtn" class="didnt-know-it-btn">Fermer</button>
             </div>
         </div>
     </div>
