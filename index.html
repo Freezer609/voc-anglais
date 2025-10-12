@@ -101,15 +101,7 @@
             </div>
         </details>
 
-        <details id="masteredWordsSection">
-            <summary>Gérer les mots maîtrisés</summary>
-            <div class="list-content">
-                <ul id="masteredWordsList" class="vocabulary-list"></ul>
-                <button id="resetMasteredBtn" class="reset-btn">Tout Réinitialiser</button>
-            </div>
-        </details>
 
-        <details>
             <summary>Statistiques de Progression</summary>
             <div class="list-content">
                 <p>Mots Totaux : <span id="totalWordsCount">0</span></p>
@@ -166,5 +158,15 @@
 
     <script src="vocab_data.js"></script>
     <script src="app.js"></script>
+
+    <div id="cheatPanel" class="draggable-panel" style="display: none;">
+        <div class="panel-header">
+            <span>Option de Triche</span>
+            <button id="closeCheatPanelBtn" class="close-btn">❌</button>
+        </div>
+        <div class="panel-content">
+            <button id="revealAnswerCheatBtn" class="reset-btn">Révéler la réponse</button>
+        </div>
+    </div>
 </body>
 </html>

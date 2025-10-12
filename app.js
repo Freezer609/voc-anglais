@@ -78,6 +78,10 @@ const exportVocabBtn = document.getElementById('exportVocabBtn');
 const revealAnswerBtn = document.getElementById('revealAnswerBtn');
 const closeAdminPanelBtn = document.getElementById('closeAdminPanelBtn');
 
+const cheatPanel = document.getElementById('cheatPanel');
+const closeCheatPanelBtn = document.getElementById('closeCheatPanelBtn');
+const revealAnswerCheatBtn = document.getElementById('revealAnswerCheatBtn');
+
 const varCss = {
     colorCorrect: getComputedStyle(document.documentElement).getPropertyValue('--color-correct').trim(),
     colorIncorrect: getComputedStyle(document.documentElement).getPropertyValue('--color-incorrect').trim(),
@@ -935,14 +939,140 @@ window.unlockAdminBridge = function(key) {
 
 adminPanelBtn.addEventListener('click', openAdminPanel);
 
+
+
 function openAdminPanel() {
+
     adminPanelModal.style.display = 'flex';
+
     vocabDataEditor.value = JSON.stringify(ALL_VOCAB_DATA, null, 2);
+
+    
+
+    // Configure the 'revealAnswerBtn' in the admin panel
+
+    revealAnswerBtn.textContent = 'Activer l\'option de triche';
+
+    revealAnswerBtn.style.color = 'black';
+
+    revealAnswerBtn.removeEventListener('click', revealAnswer); // Remove old listener
+
+    revealAnswerBtn.addEventListener('click', () => {
+
+        cheatPanel.style.display = 'block'; // Show the draggable cheat panel
+
+        closeAdminPanel(); // Close the admin panel
+
+    });
+
 }
 
+
+
 function closeAdminPanel() {
+
     adminPanelModal.style.display = 'none';
+
 }
+
+
+
+// Draggable Cheat Panel Logic
+
+let isDragging = false;
+
+let currentX;
+
+let currentY;
+
+let initialX;
+
+let initialY;
+
+let xOffset = 0;
+
+let yOffset = 0;
+
+
+
+cheatPanel.addEventListener("mousedown", dragStart);
+
+cheatPanel.addEventListener("mouseup", dragEnd);
+
+cheatPanel.addEventListener("mousemove", drag);
+
+
+
+function dragStart(e) {
+
+    initialX = e.clientX - xOffset;
+
+    initialY = e.clientY - yOffset;
+
+
+
+    if (e.target === cheatPanel || e.target.classList.contains('panel-header')) {
+
+        isDragging = true;
+
+    }
+
+}
+
+
+
+function dragEnd(e) {
+
+    isDragging = false;
+
+}
+
+
+
+function drag(e) {
+
+    if (isDragging) {
+
+        e.preventDefault();
+
+        currentX = e.clientX - initialX;
+
+        currentY = e.clientY - initialY;
+
+
+
+        xOffset = currentX;
+
+        yOffset = currentY;
+
+
+
+        setTranslate(currentX, currentY, cheatPanel);
+
+    }
+
+}
+
+
+
+function setTranslate(xPos, yPos, el) {
+
+    el.style.transform = "translate3d(" + xPos + "px, " + yPos + "px, 0)";
+
+}
+
+
+
+closeCheatPanelBtn.addEventListener('click', () => {
+
+    cheatPanel.style.display = 'none';
+
+});
+
+
+
+revealAnswerCheatBtn.addEventListener('click', revealAnswer); // The actual reveal logic
+
 
 
 async function saveVocabDataToFile() {
