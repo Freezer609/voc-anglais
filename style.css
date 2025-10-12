@@ -1240,3 +1240,20 @@ details[open] summary::after {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(3, 218, 198, 0.6);
 }
+
+.smart-review-banner {
+    background-color: #333333; /* Gris */
+    color: #000000; /* Noir */
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    font-weight: 600;
+    text-align: center;
+    font-size: 1.1em;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.smart-review-banner p {
+    margin: 0;
+    color: #FFFFFF; /* Texte blanc pour un meilleur contraste sur le gris */
+}
