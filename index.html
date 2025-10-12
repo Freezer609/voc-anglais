@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -37,6 +38,7 @@
             </div>
             <div class="feedback-buttons" id="feedbackButtons">
                 <button class="knew-it-btn" id="knewItBtn">Je l'avais</button>
+                <button class="mastered-btn" id="masteredBtn">Mot totalement maîtrisé</button>
                 <button class="didnt-know-it-btn" id="didntKnowBtn">Je ne l'avais pas</button>
             </div>
         </div>
@@ -90,6 +92,14 @@
             </div>
             <button id="matchNextBtn" style="display:none; margin-top: 30px;">Prochain Match &rarr;</button>
         </div>
+
+        <details id="masteredWordsSection">
+            <summary>Gérer les mots maîtrisés</summary>
+            <div class="list-content">
+                <ul id="masteredWordsList" class="vocabulary-list"></ul>
+                <button id="resetMasteredBtn" class="reset-btn">Tout Réinitialiser</button>
+            </div>
+        </details>
 
         <details>
             <summary id="listTitle">Liste Complète</summary>
