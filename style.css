@@ -712,6 +712,17 @@ h1 {
     border-color: transparent;
 }
 
+.panel-header .close-btn {
+    background: none;
+    border: none;
+    color: #FFFFFF;
+    font-size: 1.2em;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    transition: transform 0.2s ease-in-out;
+}
+
 .list-content, .instructions-content {
     padding: 0 22px 22px 22px;
     text-align: left;
@@ -719,12 +730,14 @@ h1 {
     transition: max-height 0.4s ease-out, border-top 0.4s;
     overflow: hidden;
     border-top: none;
+    display: none; /* Force hidden by default */
 }
 
 details[open] .list-content,
 details[open] .instructions-content {
     max-height: 10000px;
     border-top: 1px solid rgba(187, 134, 252, 0.2);
+    display: block; /* Show when open */
 }
 
 .vocabulary-list {
