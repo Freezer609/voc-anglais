@@ -86,7 +86,8 @@ const maxErrors = hangmanParts.length;
 let errors = 0;
 
 let currentScrambleWord = '';
-let currentDictationWord = '';
+let currentDictationClue = '';
+let currentDictationAnswers = [];
 
 let matchPairs = [];
 let matchedPairsCount = 0;
@@ -233,8 +234,15 @@ function displayCard() {
     }
     
     const [word, definition] = shuffledVocab[currentCardIndex];
-    frontFace.textContent = word;
-    backFace.innerHTML = definition;
+
+    if (Math.random() < 0.5) {
+        frontFace.textContent = word;
+        backFace.innerHTML = definition;
+    } else {
+        frontFace.textContent = definition;
+        backFace.innerHTML = word;
+    }
+    
     cardCounter.textContent = `${currentCardIndex + 1} / ${shuffledVocab.length}`;
     
     feedbackButtons.style.display = 'none';
@@ -564,25 +572,34 @@ function startDictationGame() {
     dictationCheckBtn.style.display = 'block';
 
     const randomPair = shuffleArray([...vocab])[0];
-    currentDictationWord = randomPair[0];
-    const definition = randomPair[1];
+    const wordPart = randomPair[0];
+    const definitionPart = randomPair[1];
+
+    if (Math.random() < 0.5) {
+        currentDictationClue = definitionPart;
+        currentDictationAnswers = wordPart.split(/[/,]/).map(item => item.trim());
+    } else {
+        currentDictationClue = wordPart;
+        currentDictationAnswers = definitionPart.split(/[/,]/).map(item => item.trim());
+    }
     
-    dictationClueDiv.textContent = definition;
+    dictationClueDiv.textContent = currentDictationClue;
     dictationInput.focus();
 }
 
 function checkDictationAnswer() {
     const userAnswer = dictationInput.value.trim();
-    const correctWord = currentDictationWord;
+    
+    const isCorrect = currentDictationAnswers.some(answer => userAnswer === answer);
 
     dictationCheckBtn.style.display = 'none';
     dictationNextBtn.style.display = 'block';
     
-    if (userAnswer === correctWord) {
-        dictationFeedbackDiv.textContent = `Exact! Le mot était : ${correctWord}`;
+    if (isCorrect) {
+        dictationFeedbackDiv.textContent = `Exact! La ou les réponses possibles étaient : ${currentDictationAnswers.join(' / ')}`;
         dictationFeedbackDiv.style.color = varCss.colorCorrect;
     } else {
-        dictationFeedbackDiv.textContent = `Incorrect. Le mot exact était : ${correctWord}`;
+        dictationFeedbackDiv.textContent = `Incorrect. La ou les réponses possibles étaient : ${currentDictationAnswers.join(' / ')}`;
         dictationFeedbackDiv.style.color = varCss.colorIncorrect;
     }
 }
