@@ -971,7 +971,15 @@ function openAdminPanel() {
 
 function closeAdminPanel() {
 
+
+
+    console.log("Fermeture du panneau Admin.");
+
+
+
     adminPanelModal.style.display = 'none';
+
+
 
 }
 
