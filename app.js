@@ -7,6 +7,10 @@ const vocabularyList = document.querySelector('.vocabulary-list');
 const feedbackButtons = document.getElementById('feedbackButtons');
 const knewItBtn = document.getElementById('knewItBtn');
 const didntKnowBtn = document.getElementById('didntKnowBtn');
+const masteredBtn = document.getElementById('masteredBtn');
+
+const masteredWordsList = document.getElementById('masteredWordsList');
+const resetMasteredBtn = document.getElementById('resetMasteredBtn');
 
 const flashcardModeBtn = document.getElementById('flashcardModeBtn');
 const quizModeBtn = document.getElementById('quizModeBtn');
@@ -74,7 +78,7 @@ let chapterAlert = null;
 let chosenWord = '';
 let shuffledVocab = [];
 let currentCardIndex = 0;
-let masteredWords = new Set();
+let masteredWords = loadMasteredWords();
 
 let currentQuizQuestionIndex = 0;
 let quizQuestions = [];
@@ -94,6 +98,15 @@ let matchedPairsCount = 0;
 let selectedWordItem = null;
 let selectedDefItem = null;
 const MATCH_COUNT = 6;
+
+function loadMasteredWords() {
+    const storedWords = localStorage.getItem('masteredWords_vocAnglais');
+    return storedWords ? new Set(JSON.parse(storedWords)) : new Set();
+}
+
+function saveMasteredWords() {
+    localStorage.setItem('masteredWords_vocAnglais', JSON.stringify(Array.from(masteredWords)));
+}
 
 function levenshtein(a, b) {
     const matrix = Array(b.length + 1).fill(null).map(() => Array(a.length + 1).fill(null));
@@ -157,6 +170,67 @@ function hideAlert() {
     alertMessageDiv.style.display = 'none';
 }
 
+function updateMasteredWordsDisplay() {
+    masteredWordsList.innerHTML = '';
+    if (masteredWords.size === 0) {
+        masteredWordsList.innerHTML = '<li>Aucun mot maîtrisé pour le moment.</li>';
+        resetMasteredBtn.style.display = 'none';
+        return;
+    }
+    resetMasteredBtn.style.display = 'block';
+    masteredWords.forEach(word => {
+        const li = document.createElement('li');
+        li.classList.add('mastered-word-item');
+        li.innerHTML = `<span>${word}</span><button class="remove-mastered-btn" data-word="${word}">❌</button>`;
+        masteredWordsList.appendChild(li);
+    });
+
+    masteredWordsList.querySelectorAll('.remove-mastered-btn').forEach(button => {
+        button.addEventListener('click', (event) => {
+            const wordToRemove = event.target.dataset.word;
+            masteredWords.delete(wordToRemove);
+            saveMasteredWords();
+            updateMasteredWordsDisplay();
+            displayAlert(`'${wordToRemove}' a été retiré des mots maîtrisés.`, varCss.colorPrimary);
+            // Restart current game mode to reflect changes
+            if (currentChapterKey && currentSubcategoryKey) {
+                changeVocabulary(currentChapterKey, currentSubcategoryKey);
+            }
+        });
+    });
+}
+
+function handleMasteredWord() {
+    const currentWord = shuffledVocab[currentCardIndex][0];
+    masteredWords.add(currentWord);
+    saveMasteredWords();
+    updateMasteredWordsDisplay();
+    displayAlert(`'${currentWord}' a été marqué comme maîtrisé et ne réapparaîtra plus.`, varCss.colorPrimary);
+
+    // Proceed to the next card, similar to handleFeedback
+    flashcard.classList.remove('flipped');
+    feedbackButtons.style.display = 'none';
+    setTimeout(() => {
+        currentCardIndex++;
+        if (currentCardIndex < shuffledVocab.length) {
+            displayCard();
+        } else {
+            // If all words in current shuffledVocab are mastered or reviewed, filter and restart
+            shuffledVocab = shuffledVocab.filter(pair => !masteredWords.has(pair[0]));
+            if (shuffledVocab.length > 0) {
+                currentCardIndex = 0;
+                shuffleArray(shuffledVocab);
+                displayAlert(`Nouveau tour avec ${shuffledVocab.length} mots restants!`, varCss.colorPrimary);
+                displayCard();
+            } else {
+                frontFace.textContent = "Félicitations! Tu as maîtrisé tous les mots!";
+                backFace.textContent = "Clique sur le bouton 'Mode Cartes' pour recommencer.";
+                cardCounter.textContent = "";
+            }
+        }
+    }, 350);
+}
+
 function generateChapterButtons() {
     chapterSelectorDiv.innerHTML = '';
     if (typeof ALL_VOCAB_DATA === 'undefined') return;
@@ -207,7 +281,8 @@ function changeVocabulary(chapterKey, subcategoryKey) {
 
     const chapter = ALL_VOCAB_DATA[chapterKey];
     const subcategory = chapter.subcategories[subcategoryKey];
-    vocab = subcategory.data;
+    const fullVocab = subcategory.data;
+    vocab = fullVocab.filter(pair => !masteredWords.has(pair[0]));
     chapterAlert = subcategory.alert;
 
     listTitleSummary.textContent = `${chapter.title} - ${subcategory.name}`;
@@ -323,6 +398,7 @@ function handleFeedback(known) {
 flashcard.addEventListener('click', flipCard);
 knewItBtn.addEventListener('click', () => handleFeedback(true));
 didntKnowBtn.addEventListener('click', () => handleFeedback(false));
+masteredBtn.addEventListener('click', handleMasteredWord);
 
 function startQuizGame() {
     showGameContainer(quizGameContainer, quizModeBtn);
@@ -777,9 +853,23 @@ scrambleModeBtn.addEventListener('click', startScrambleGame);
 dictationModeBtn.addEventListener('click', startDictationGame);
 matchModeBtn.addEventListener('click', startMatchGame);
 
+resetMasteredBtn.addEventListener('click', () => {
+    if (confirm("Êtes-vous sûr de vouloir réinitialiser tous les mots maîtrisés ? Ils réapparaîtront dans les jeux.")) {
+        masteredWords.clear();
+        saveMasteredWords();
+        updateMasteredWordsDisplay();
+        displayAlert("Tous les mots maîtrisés ont été réinitialisés.", varCss.colorPrimary);
+        // Restart current game mode to reflect changes
+        if (currentChapterKey && currentSubcategoryKey) {
+            changeVocabulary(currentChapterKey, currentSubcategoryKey);
+        }
+    }
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     generateChapterButtons();
     hideAlert();
+    updateMasteredWordsDisplay();
     
     frontFace.textContent = "Sélectionnez un chapitre ci-dessus";
     backFace.textContent = "Puis une section pour commencer à jouer.";
