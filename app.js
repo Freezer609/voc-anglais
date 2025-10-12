@@ -289,14 +289,14 @@ function openCategoryModal(chapterKey, chapter) {
         });
         modalButtons.appendChild(button);
     });
-    categoryModal.style.display = 'flex';
+    categoryModal.classList.add('is-open');
 }
 
 function changeVocabulary(chapterKey, subcategoryKey) {
     hideAllGameContainers();
     currentChapterKey = chapterKey;
     currentSubcategoryKey = subcategoryKey;
-    categoryModal.style.display = 'none'; // Moved here
+    categoryModal.classList.remove('is-open'); // Moved here
     
     trackEvent(`section-${chapterKey}-${subcategoryKey}-selected`);
     

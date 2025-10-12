@@ -779,6 +779,10 @@ details[open] .instructions-content {
     align-items: center;
 }
 
+.modal.is-open {
+    display: flex;
+}
+
 .modal-content {
     background: rgba(26, 26, 36, 0.95);
     backdrop-filter: blur(30px);
