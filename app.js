@@ -286,7 +286,6 @@ function openCategoryModal(chapterKey, chapter) {
         button.style.color = '#FFFFFF';
         button.addEventListener('click', () => {
             changeVocabulary(chapterKey, subKey);
-            categoryModal.style.display = 'none';
         });
         modalButtons.appendChild(button);
     });
@@ -297,6 +296,7 @@ function changeVocabulary(chapterKey, subcategoryKey) {
     hideAllGameContainers();
     currentChapterKey = chapterKey;
     currentSubcategoryKey = subcategoryKey;
+    categoryModal.style.display = 'none'; // Moved here
     
     trackEvent(`section-${chapterKey}-${subcategoryKey}-selected`);
     
