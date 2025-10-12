@@ -400,7 +400,7 @@
         }
 
         .feedback-buttons .knew-it-btn {
-            background: linear-gradient(135deg, var(--color-correct) 0%, #388E3C 100%);
+            background: var(--color-correct);
             box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
         }
         
@@ -410,7 +410,7 @@
         }
 
         .feedback-buttons .didnt-know-it-btn {
-            background: linear-gradient(135deg, var(--color-incorrect) 0%, #D32F2F 100%);
+            background: var(--color-incorrect);
             box-shadow: 0 4px 15px rgba(244, 67, 54, 0.4);
         }
         
@@ -583,7 +583,7 @@
             font-size: 1.15em;
         }
 
-        .game-container button:not(#scrambleNextBtn, #dictationNextBtn, #matchNextBtn) {
+        .game-container button:not(#scrambleNextBtn, #dictationNextBtn, #matchNextBtn, .knew-it-btn, .didnt-know-it-btn) {
             background: linear-gradient(135deg, var(--color-primary) 0%, #9966CC 100%);
             color: #FFFFFF;
             border: none;
