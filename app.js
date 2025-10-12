@@ -237,7 +237,6 @@ function displayCard() {
     backFace.innerHTML = definition;
     cardCounter.textContent = `${currentCardIndex + 1} / ${shuffledVocab.length}`;
     
-    flashcard.classList.remove('flipped');
     feedbackButtons.style.display = 'none';
 }
 
@@ -265,24 +264,27 @@ function handleFeedback(known) {
         currentCardIndex--;
     }
 
-    currentCardIndex++;
-    if (currentCardIndex < shuffledVocab.length) {
-        displayCard();
-    } else {
-        shuffledVocab = shuffledVocab.filter(pair => !masteredWords.has(pair[0]));
-        if (shuffledVocab.length > 0) {
-            currentCardIndex = 0;
-            shuffleArray(shuffledVocab);
-            displayAlert(`Nouveau tour avec ${shuffledVocab.length} mots restants!`, varCss.colorPrimary);
+    flashcard.classList.remove('flipped');
+    feedbackButtons.style.display = 'none';
+
+    setTimeout(() => {
+        currentCardIndex++;
+        if (currentCardIndex < shuffledVocab.length) {
             displayCard();
         } else {
-            frontFace.textContent = "Félicitations! Tu as maîtrisé tous les mots!";
-            backFace.textContent = "Clique sur le bouton 'Mode Cartes' pour recommencer.";
-            cardCounter.textContent = "";
-            feedbackButtons.style.display = 'none';
-            flashcard.classList.remove('flipped');
+            shuffledVocab = shuffledVocab.filter(pair => !masteredWords.has(pair[0]));
+            if (shuffledVocab.length > 0) {
+                currentCardIndex = 0;
+                shuffleArray(shuffledVocab);
+                displayAlert(`Nouveau tour avec ${shuffledVocab.length} mots restants!`, varCss.colorPrimary);
+                displayCard();
+            } else {
+                frontFace.textContent = "Félicitations! Tu as maîtrisé tous les mots!";
+                backFace.textContent = "Clique sur le bouton 'Mode Cartes' pour recommencer.";
+                cardCounter.textContent = "";
+            }
         }
-    }
+    }, 350);
 }
 
 flashcard.addEventListener('click', flipCard);
