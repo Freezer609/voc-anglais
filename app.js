@@ -95,6 +95,31 @@ let selectedWordItem = null;
 let selectedDefItem = null;
 const MATCH_COUNT = 6;
 
+function levenshtein(a, b) {
+    const matrix = Array(b.length + 1).fill(null).map(() => Array(a.length + 1).fill(null));
+
+    for (let i = 0; i <= a.length; i += 1) {
+        matrix[0][i] = i;
+    }
+
+    for (let j = 0; j <= b.length; j += 1) {
+        matrix[j][0] = j;
+    }
+
+    for (let j = 1; j <= b.length; j += 1) {
+        for (let i = 1; i <= a.length; i += 1) {
+            const indicator = a[i - 1] === b[j - 1] ? 0 : 1;
+            matrix[j][i] = Math.min(
+                matrix[j][i - 1] + 1, 
+                matrix[j - 1][i] + 1, 
+                matrix[j - 1][i - 1] + indicator,
+            );
+        }
+    }
+
+    return matrix[b.length][a.length];
+}
+
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -589,14 +614,32 @@ function startDictationGame() {
 
 function checkDictationAnswer() {
     const userAnswer = dictationInput.value.trim();
-    
-    const isCorrect = currentDictationAnswers.some(answer => userAnswer === answer);
+    let isExactMatch = false;
+    let closeMatch = null;
+
+    if (currentDictationAnswers.some(answer => userAnswer === answer)) {
+        isExactMatch = true;
+    }
+
+    if (!isExactMatch) {
+        for (const answer of currentDictationAnswers) {
+            const distance = levenshtein(userAnswer, answer);
+            const threshold = answer.length > 7 ? 2 : 1;
+            if (distance <= threshold) {
+                closeMatch = answer;
+                break;
+            }
+        }
+    }
 
     dictationCheckBtn.style.display = 'none';
     dictationNextBtn.style.display = 'block';
     
-    if (isCorrect) {
-        dictationFeedbackDiv.textContent = `Exact! La ou les réponses possibles étaient : ${currentDictationAnswers.join(' / ')}`;
+    if (isExactMatch) {
+        dictationFeedbackDiv.textContent = `Exact!`;
+        dictationFeedbackDiv.style.color = varCss.colorCorrect;
+    } else if (closeMatch) {
+        dictationFeedbackDiv.innerHTML = `Presque ! La bonne orthographe est : <span style="color: #CCCCCC;">${closeMatch}</span>`;
         dictationFeedbackDiv.style.color = varCss.colorCorrect;
     } else {
         dictationFeedbackDiv.textContent = `Incorrect. La ou les réponses possibles étaient : ${currentDictationAnswers.join(' / ')}`;
