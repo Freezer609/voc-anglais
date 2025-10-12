@@ -650,6 +650,28 @@ function checkDictationAnswer() {
 dictationCheckBtn.addEventListener('click', checkDictationAnswer);
 dictationNextBtn.addEventListener('click', startDictationGame);
 
+scrambleInput.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        if (scrambleNextBtn.style.display !== 'none') {
+            scrambleNextBtn.click();
+        } else {
+            scrambleCheckBtn.click();
+        }
+    }
+});
+
+dictationInput.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        if (dictationNextBtn.style.display !== 'none') {
+            dictationNextBtn.click();
+        } else {
+            dictationCheckBtn.click();
+        }
+    }
+});
+
 function startMatchGame() {
     showGameContainer(matchGameContainer, matchModeBtn);
     trackEvent('mode-match-started');
