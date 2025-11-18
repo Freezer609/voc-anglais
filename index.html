@@ -177,6 +177,14 @@
     </div>
 
     <script src="vocab_data.js"></script>
+    <script src="suggestMastered.js"></script>
+    <script src="quiz.js"></script>
+    <script src="hangman.js"></script>
+    <script src="scramble.js"></script>
+    <script src="dictation.js"></script>
+    <script src="match.js"></script>
+    <script src="flashcard2.js"></script>
+    <script src="flashcard.js"></script>
     <script src="app.js"></script>
 
     <div id="flashcard2-welcome-modal" class="modal">
@@ -190,6 +198,21 @@
             <div class="modal-buttons">
                 <button id="flashcard2-go-btn" class="go-btn">ALLER VOIR</button>
                 <button id="flashcard2-later-btn" class="later-btn">Plus tard</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="suggest-mastered-modal" class="modal">
+        <div class="modal-content">
+            <h3>Mot presque maîtrisé !</h3>
+            <p>Vous avez marqué ce mot comme étant connu plusieurs fois, voulez-vous le marquer comme maîtrisé ?</p>
+            <div class="modal-options">
+                <input type="checkbox" id="suggest-mastered-dont-show-again">
+                <label for="suggest-mastered-dont-show-again">Ne plus me le rappeler</label>
+            </div>
+            <div class="modal-buttons">
+                <button id="suggest-mastered-yes-btn" class="mastered-btn">Marquer comme maîtrisé</button>
+                <button id="suggest-mastered-no-btn" class="later-btn">Pas encore</button>
             </div>
         </div>
     </div>

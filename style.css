@@ -1300,3 +1300,35 @@ details[open] summary::after {
 #flashcard2-welcome-modal .later-btn {
     background: #666;
 }
+
+#suggest-mastered-modal .modal-content {
+    max-width: 500px;
+}
+
+#suggest-mastered-modal p {
+    margin: 20px 0;
+    line-height: 1.6;
+    color: #CCCCCC;
+}
+
+#suggest-mastered-modal .modal-options {
+    margin-bottom: 25px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+}
+
+#suggest-mastered-modal .modal-options label {
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+#suggest-mastered-modal .modal-buttons {
+    flex-direction: row;
+    gap: 15px;
+}
+
+#suggest-mastered-modal .later-btn {
+    background: #666;
+}
+
