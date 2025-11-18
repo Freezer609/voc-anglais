@@ -74,6 +74,11 @@ const categoryModal = document.getElementById('categoryModal');
 const modalTitle = document.getElementById('modalTitle');
 const modalButtons = document.getElementById('modalButtons');
 
+const flashcard2WelcomeModal = document.getElementById('flashcard2-welcome-modal');
+const flashcard2DontShowAgain = document.getElementById('flashcard2-dont-show-again');
+const flashcard2GoBtn = document.getElementById('flashcard2-go-btn');
+const flashcard2LaterBtn = document.getElementById('flashcard2-later-btn');
+
 const totalWordsCountSpan = document.getElementById('totalWordsCount');
 const masteredWordsCountSpan = document.getElementById('masteredWordsCount');
 const progressPercentageSpan = document.getElementById('progressPercentage');
@@ -915,11 +920,6 @@ resetMasteredBtn.addEventListener('click', () => {
     }
 });
 
-const flashcard2WelcomeModal = document.getElementById('flashcard2-welcome-modal');
-const flashcard2DontShowAgain = document.getElementById('flashcard2-dont-show-again');
-const flashcard2GoBtn = document.getElementById('flashcard2-go-btn');
-const flashcard2LaterBtn = document.getElementById('flashcard2-later-btn');
-
 function startFlashcard2Mode() {
     if (localStorage.getItem('hideFlashcard2Welcome') !== 'true') {
         flashcard2WelcomeModal.classList.add('is-open');
@@ -944,22 +944,6 @@ function startFlashcard2Mode() {
     currentCardIndex = 0;
     displayFlashcard2Card();
 }
-
-function closeFlashcard2Welcome() {
-    if (flashcard2DontShowAgain.checked) {
-        localStorage.setItem('hideFlashcard2Welcome', 'true');
-    }
-    flashcard2WelcomeModal.classList.remove('is-open');
-}
-
-flashcard2GoBtn.addEventListener('click', () => {
-    closeFlashcard2Welcome();
-    showGameContainer(flashcard2GameContainer, flashcard2ModeBtn);
-});
-
-flashcard2LaterBtn.addEventListener('click', () => {
-    closeFlashcard2Welcome();
-});
 
 function displayFlashcard2Card() {
     if (shuffledVocab.length === 0) {
@@ -1061,6 +1045,22 @@ flashcard2MasteredBtn.addEventListener('click', () => {
             }
         }
     }, 350);
+});
+
+function closeFlashcard2Welcome() {
+    if (flashcard2DontShowAgain.checked) {
+        localStorage.setItem('hideFlashcard2Welcome', 'true');
+    }
+    flashcard2WelcomeModal.classList.remove('is-open');
+}
+
+flashcard2GoBtn.addEventListener('click', () => {
+    closeFlashcard2Welcome();
+    showGameContainer(flashcard2GameContainer, flashcard2ModeBtn);
+});
+
+flashcard2LaterBtn.addEventListener('click', () => {
+    closeFlashcard2Welcome();
 });
 
 document.addEventListener('DOMContentLoaded', () => {
