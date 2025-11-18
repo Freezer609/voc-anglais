@@ -1265,3 +1265,38 @@ details[open] summary::after {
     text-align: center;
     font-size: 0.9em;
 }
+
+#flashcard2-welcome-modal .modal-content {
+    max-width: 500px;
+}
+
+#flashcard2-welcome-modal p {
+    margin: 20px 0;
+    line-height: 1.6;
+    color: #CCCCCC;
+}
+
+#flashcard2-welcome-modal .modal-options {
+    margin-bottom: 25px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+}
+
+#flashcard2-welcome-modal .modal-options label {
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+#flashcard2-welcome-modal .modal-buttons {
+    flex-direction: row;
+    gap: 15px;
+}
+
+#flashcard2-welcome-modal .go-btn {
+    background: linear-gradient(135deg, var(--color-correct) 0%, #388E3C 100%);
+}
+
+#flashcard2-welcome-modal .later-btn {
+    background: #666;
+}

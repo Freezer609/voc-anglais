@@ -915,8 +915,18 @@ resetMasteredBtn.addEventListener('click', () => {
     }
 });
 
+const flashcard2WelcomeModal = document.getElementById('flashcard2-welcome-modal');
+const flashcard2DontShowAgain = document.getElementById('flashcard2-dont-show-again');
+const flashcard2GoBtn = document.getElementById('flashcard2-go-btn');
+const flashcard2LaterBtn = document.getElementById('flashcard2-later-btn');
+
 function startFlashcard2Mode() {
-    showGameContainer(flashcard2GameContainer, flashcard2ModeBtn);
+    if (localStorage.getItem('hideFlashcard2Welcome') !== 'true') {
+        flashcard2WelcomeModal.classList.add('is-open');
+    } else {
+        showGameContainer(flashcard2GameContainer, flashcard2ModeBtn);
+    }
+
     trackEvent('mode-flashcard-2-started');
     flashcard2.classList.remove('flipped');
     flashcard2FeedbackButtons.style.display = 'none';
@@ -934,6 +944,22 @@ function startFlashcard2Mode() {
     currentCardIndex = 0;
     displayFlashcard2Card();
 }
+
+function closeFlashcard2Welcome() {
+    if (flashcard2DontShowAgain.checked) {
+        localStorage.setItem('hideFlashcard2Welcome', 'true');
+    }
+    flashcard2WelcomeModal.classList.remove('is-open');
+}
+
+flashcard2GoBtn.addEventListener('click', () => {
+    closeFlashcard2Welcome();
+    showGameContainer(flashcard2GameContainer, flashcard2ModeBtn);
+});
+
+flashcard2LaterBtn.addEventListener('click', () => {
+    closeFlashcard2Welcome();
+});
 
 function displayFlashcard2Card() {
     if (shuffledVocab.length === 0) {
