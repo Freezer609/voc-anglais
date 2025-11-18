@@ -19,12 +19,12 @@
         </div>
         <div class="mode-selector">
             <button id="flashcardModeBtn" class="active" title="Mode Cartes"><i class="fas fa-redo-alt"></i> Mode Cartes</button>
+            <button id="flashcard2ModeBtn" title="Mode Flash Card 2"><i class="fas fa-brain"></i> Flash Card 2</button>
             <button id="quizModeBtn" title="Mode Quiz"><i class="fas fa-question-circle"></i> Mode Quiz</button>
             <button id="hangmanModeBtn" title="Mode Pendu"><i class="fas fa-user-slash"></i> Mode Pendu</button>
             <button id="scrambleModeBtn" title="Mode Réarrangement"><i class="fas fa-random"></i> Mots Mélangés</button>
             <button id="dictationModeBtn" title="Mode Dictée"><i class="fas fa-keyboard"></i> Mode Dictée</button>
             <button id="matchModeBtn" title="Mode Match"><i class="fas fa-link"></i> Mode Association</button>
-            <button id="smartReviewModeBtn" title="Mode Révision Intelligente"><i class="fas fa-brain"></i> Révision Intelligente</button>
         </div>
 
         <div id="flashcardGameContainer" class="game-container active-mode" style="display: flex; opacity: 1;">
@@ -94,23 +94,20 @@
             <button id="matchNextBtn" style="display:none; margin-top: 30px;">Prochain Match &rarr;</button>
         </div>
 
-        <div id="smartReviewGameContainer" class="game-container">
-            <div class="smart-review-banner">
-                <p>Cette catégorie a été créée selon l'IA. Cette méthode serait la meilleure pour étudier. Vu que j'ai pas trop d'idée de comment gérer cette partie je ne résoudrais pas les bugs s'il y en a</p>
-            </div>
+        <div id="flashcard2GameContainer" class="game-container">
             <div class="card-container">
-                <div id="smartReviewFlashcard" class="card">
-                    <div id="smartReviewFront" class="card-face card-front">Sélectionnez un chapitre ci-dessus</div>
-                    <div id="smartReviewBack" class="card-face card-back">Puis une section pour commencer la révision intelligente.</div>
+                <div id="flashcard2" class="card">
+                    <div id="flashcard2Front" class="card-face card-front">Sélectionnez un chapitre ci-dessus</div>
+                    <div id="flashcard2Back" class="card-face card-back">Puis une section pour commencer.</div>
                 </div>
             </div>
             <div class="controls"> 
-                <span id="smartReviewCardCounter"></span>
+                <span id="flashcard2CardCounter"></span>
             </div>
-            <div class="feedback-buttons" id="smartReviewFeedbackButtons">
-                <button class="knew-it-btn" id="smartReviewKnewItBtn">Je l'avais</button>
-                <button class="mastered-btn" id="smartReviewMasteredBtn">Mot totalement maîtrisé</button>
-                <button class="didnt-know-it-btn" id="smartReviewDidntKnowBtn">Je ne l'avais pas</button>
+            <div class="feedback-buttons" id="flashcard2FeedbackButtons">
+                <button class="knew-it-btn" id="flashcard2KnewItBtn">Je l'avais</button>
+                <button class="mastered-btn" id="flashcard2MasteredBtn">Mot totalement maîtrisé</button>
+                <button class="didnt-know-it-btn" id="flashcard2DidntKnowBtn">Je ne l'avais pas</button>
             </div>
         </div>
 

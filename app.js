@@ -13,31 +13,31 @@ const masteredWordsList = document.getElementById('masteredWordsList');
 const resetMasteredBtn = document.getElementById('resetMasteredBtn');
 
 const flashcardModeBtn = document.getElementById('flashcardModeBtn');
+const flashcard2ModeBtn = document.getElementById('flashcard2ModeBtn');
 const quizModeBtn = document.getElementById('quizModeBtn');
 const hangmanModeBtn = document.getElementById('hangmanModeBtn');
 const scrambleModeBtn = document.getElementById('scrambleModeBtn');
 const dictationModeBtn = document.getElementById('dictationModeBtn');
 const matchModeBtn = document.getElementById('matchModeBtn');
-const smartReviewModeBtn = document.getElementById('smartReviewModeBtn');
 
 const flashcardGameContainer = document.getElementById('flashcardGameContainer');
+const flashcard2GameContainer = document.getElementById('flashcard2GameContainer');
 const quizGameContainer = document.getElementById('quizGameContainer');
 const hangmanGameContainer = document.getElementById('hangmanGameContainer');
 const scrambleGameContainer = document.getElementById('scrambleGameContainer');
 const dictationGameContainer = document.getElementById('dictationGameContainer');
 const matchGameContainer = document.getElementById('matchGameContainer');
-const smartReviewGameContainer = document.getElementById('smartReviewGameContainer');
-const allContainers = [flashcardGameContainer, quizGameContainer, hangmanGameContainer, scrambleGameContainer, dictationGameContainer, matchGameContainer, smartReviewGameContainer];
-const allModeBtns = [flashcardModeBtn, quizModeBtn, hangmanModeBtn, scrambleModeBtn, dictationModeBtn, matchModeBtn, smartReviewModeBtn];
+const allContainers = [flashcardGameContainer, flashcard2GameContainer, quizGameContainer, hangmanGameContainer, scrambleGameContainer, dictationGameContainer, matchGameContainer];
+const allModeBtns = [flashcardModeBtn, flashcard2ModeBtn, quizModeBtn, hangmanModeBtn, scrambleModeBtn, dictationModeBtn, matchModeBtn];
 
-const smartReviewFlashcard = document.getElementById('smartReviewFlashcard');
-const smartReviewFront = document.getElementById('smartReviewFront');
-const smartReviewBack = document.getElementById('smartReviewBack');
-const smartReviewCardCounter = document.getElementById('smartReviewCardCounter');
-const smartReviewFeedbackButtons = document.getElementById('smartReviewFeedbackButtons');
-const smartReviewKnewItBtn = document.getElementById('smartReviewKnewItBtn');
-const smartReviewMasteredBtn = document.getElementById('smartReviewMasteredBtn');
-const smartReviewDidntKnowBtn = document.getElementById('smartReviewDidntKnowBtn');
+const flashcard2 = document.getElementById('flashcard2');
+const flashcard2Front = document.getElementById('flashcard2Front');
+const flashcard2Back = document.getElementById('flashcard2Back');
+const flashcard2CardCounter = document.getElementById('flashcard2CardCounter');
+const flashcard2FeedbackButtons = document.getElementById('flashcard2FeedbackButtons');
+const flashcard2KnewItBtn = document.getElementById('flashcard2KnewItBtn');
+const flashcard2MasteredBtn = document.getElementById('flashcard2MasteredBtn');
+const flashcard2DidntKnowBtn = document.getElementById('flashcard2DidntKnowBtn');
 
 const quizQuestion = document.getElementById('quizQuestion');
 const quizOptions = document.getElementById('quizOptions');
@@ -899,7 +899,7 @@ hangmanModeBtn.addEventListener('click', startHangGame);
 scrambleModeBtn.addEventListener('click', startScrambleGame);
 dictationModeBtn.addEventListener('click', startDictationGame);
 matchModeBtn.addEventListener('click', startMatchGame);
-smartReviewModeBtn.addEventListener('click', startSmartReviewMode);
+flashcard2ModeBtn.addEventListener('click', startFlashcard2Mode);
 
 resetMasteredBtn.addEventListener('click', () => {
     if (confirm("Êtes-vous sûr de vouloir réinitialiser tous les mots maîtrisés ? Ils réapparaîtront dans les jeux.")) {
@@ -915,59 +915,54 @@ resetMasteredBtn.addEventListener('click', () => {
     }
 });
 
-function startSmartReviewMode() {
-    showGameContainer(smartReviewGameContainer, smartReviewModeBtn);
-    trackEvent('mode-revision-intelligente-started');
-    smartReviewFlashcard.classList.remove('flipped');
-    smartReviewFeedbackButtons.style.display = 'none';
+function startFlashcard2Mode() {
+    showGameContainer(flashcard2GameContainer, flashcard2ModeBtn);
+    trackEvent('mode-flashcard-2-started');
+    flashcard2.classList.remove('flipped');
+    flashcard2FeedbackButtons.style.display = 'none';
 
     const unmasteredVocab = vocab.filter(pair => !masteredWords.has(pair[0]));
 
     if (unmasteredVocab.length === 0) {
-        smartReviewFront.textContent = "Félicitations ! Tous les mots de ce chapitre sont maîtrisés.";
-        smartReviewBack.textContent = "Vous pouvez réinitialiser les mots maîtrisés ou choisir un autre chapitre.";
-        smartReviewCardCounter.textContent = "";
+        flashcard2Front.textContent = "Félicitations ! Tous les mots de ce chapitre sont maîtrisés.";
+        flashcard2Back.textContent = "Vous pouvez réinitialiser les mots maîtrisés ou choisir un autre chapitre.";
+        flashcard2CardCounter.textContent = "";
         return;
     }
 
     shuffledVocab = shuffleArray([...unmasteredVocab]);
     currentCardIndex = 0;
-    displaySmartReviewCard();
+    displayFlashcard2Card();
 }
 
-function displaySmartReviewCard() {
+function displayFlashcard2Card() {
     if (shuffledVocab.length === 0) {
-        smartReviewFront.textContent = "Félicitations ! Tous les mots de ce chapitre sont maîtrisés.";
-        smartReviewBack.textContent = "Vous pouvez réinitialiser les mots maîtrisés ou choisir un autre chapitre.";
-        smartReviewCardCounter.textContent = "";
+        flashcard2Front.textContent = "Félicitations ! Tous les mots de ce chapitre sont maîtrisés.";
+        flashcard2Back.textContent = "Vous pouvez réinitialiser les mots maîtrisés ou choisir un autre chapitre.";
+        flashcard2CardCounter.textContent = "";
         return;
     }
 
     const [word, definition] = shuffledVocab[currentCardIndex];
 
-    if (Math.random() < 0.5) {
-        smartReviewFront.textContent = word;
-        smartReviewBack.innerHTML = definition;
-    } else {
-        smartReviewFront.textContent = definition;
-        smartReviewBack.innerHTML = word;
-    }
+    flashcard2Front.textContent = definition;
+    flashcard2Back.innerHTML = word;
     
-    smartReviewCardCounter.textContent = `${currentCardIndex + 1} / ${shuffledVocab.length}`;
-    smartReviewFlashcard.classList.remove('flipped');
-    smartReviewFeedbackButtons.style.display = 'none';
+    flashcard2CardCounter.textContent = `${currentCardIndex + 1} / ${shuffledVocab.length}`;
+    flashcard2.classList.remove('flipped');
+    flashcard2FeedbackButtons.style.display = 'none';
 }
 
-function flipSmartReviewCard() {
+function flipFlashcard2Card() {
     if (shuffledVocab.length === 0) return;
     
-    smartReviewFlashcard.classList.toggle('flipped');
-    if (smartReviewFlashcard.classList.contains('flipped')) {
-        smartReviewFeedbackButtons.style.display = 'flex';
+    flashcard2.classList.toggle('flipped');
+    if (flashcard2.classList.contains('flipped')) {
+        flashcard2FeedbackButtons.style.display = 'flex';
     }
 }
 
-function handleSmartReviewFeedback(known) {
+function handleFlashcard2Feedback(known) {
     const currentWord = shuffledVocab[currentCardIndex][0];
     
     if (known) {
@@ -984,13 +979,13 @@ function handleSmartReviewFeedback(known) {
         currentCardIndex--; // Stay on the same index for the next card
     }
 
-    smartReviewFlashcard.classList.remove('flipped');
-    smartReviewFeedbackButtons.style.display = 'none';
+    flashcard2.classList.remove('flipped');
+    flashcard2FeedbackButtons.style.display = 'none';
 
     setTimeout(() => {
         currentCardIndex++;
         if (currentCardIndex < shuffledVocab.length) {
-            displaySmartReviewCard();
+            displayFlashcard2Card();
         } else {
             // If all words in current shuffledVocab are reviewed, filter and restart
             const unmasteredRemaining = vocab.filter(pair => !masteredWords.has(pair[0]));
@@ -998,20 +993,20 @@ function handleSmartReviewFeedback(known) {
                 shuffledVocab = shuffleArray([...unmasteredRemaining]);
                 currentCardIndex = 0;
                 displayAlert(`Nouveau tour de révision avec ${shuffledVocab.length} mots restants!`, varCss.colorPrimary);
-                displaySmartReviewCard();
+                displayFlashcard2Card();
             } else {
-                smartReviewFront.textContent = "Félicitations ! Tous les mots de ce chapitre sont maîtrisés.";
-                smartReviewBack.textContent = "Vous pouvez réinitialiser les mots maîtrisés ou choisir un autre chapitre.";
-                smartReviewCardCounter.textContent = "";
+                flashcard2Front.textContent = "Félicitations ! Tous les mots de ce chapitre sont maîtrisés.";
+                flashcard2Back.textContent = "Vous pouvez réinitialiser les mots maîtrisés ou choisir un autre chapitre.";
+                flashcard2CardCounter.textContent = "";
             }
         }
     }, 350);
 }
 
-smartReviewFlashcard.addEventListener('click', flipSmartReviewCard);
-smartReviewKnewItBtn.addEventListener('click', () => handleSmartReviewFeedback(true));
-smartReviewDidntKnowBtn.addEventListener('click', () => handleSmartReviewFeedback(false));
-smartReviewMasteredBtn.addEventListener('click', () => {
+flashcard2.addEventListener('click', flipFlashcard2Card);
+flashcard2KnewItBtn.addEventListener('click', () => handleFlashcard2Feedback(true));
+flashcard2DidntKnowBtn.addEventListener('click', () => handleFlashcard2Feedback(false));
+flashcard2MasteredBtn.addEventListener('click', () => {
     const currentWord = shuffledVocab[currentCardIndex][0];
     masteredWords.add(currentWord);
     saveMasteredWords();
@@ -1019,24 +1014,24 @@ smartReviewMasteredBtn.addEventListener('click', () => {
     updateProgressStatistics();
     displayAlert(`'${currentWord}' a été marqué comme maîtrisé et ne réapparaîtra plus.`, varCss.colorPrimary);
 
-    // Proceed to the next card, similar to handleSmartReviewFeedback
-    smartReviewFlashcard.classList.remove('flipped');
-    smartReviewFeedbackButtons.style.display = 'none';
+    // Proceed to the next card, similar to handleFlashcard2Feedback
+    flashcard2.classList.remove('flipped');
+    flashcard2FeedbackButtons.style.display = 'none';
     setTimeout(() => {
         currentCardIndex++;
         if (currentCardIndex < shuffledVocab.length) {
-            displaySmartReviewCard();
+            displayFlashcard2Card();
         } else {
             const unmasteredRemaining = vocab.filter(pair => !masteredWords.has(pair[0]));
             if (unmasteredRemaining.length > 0) {
                 shuffledVocab = shuffleArray([...unmasteredRemaining]);
                 currentCardIndex = 0;
                 displayAlert(`Nouveau tour de révision avec ${shuffledVocab.length} mots restants!`, varCss.colorPrimary);
-                displaySmartReviewCard();
+                displayFlashcard2Card();
             } else {
-                smartReviewFront.textContent = "Félicitations ! Tous les mots de ce chapitre sont maîtrisés.";
-                smartReviewBack.textContent = "Vous pouvez réinitialiser les mots maîtrisés ou choisir un autre chapitre.";
-                smartReviewCardCounter.textContent = "";
+                flashcard2Front.textContent = "Félicitations ! Tous les mots de ce chapitre sont maîtrisés.";
+                flashcard2Back.textContent = "Vous pouvez réinitialiser les mots maîtrisés ou choisir un autre chapitre.";
+                flashcard2CardCounter.textContent = "";
             }
         }
     }, 350);
