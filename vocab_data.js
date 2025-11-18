@@ -384,7 +384,7 @@ const ALL_VOCAB_DATA = {
 ["brick-and-mortar shop", "un vrai magasin (pas en ligne)"],
 ["the remainder", "le reste, le restant, le solde"],
 ["to collect", "aller chercher, recueillir"],
-["a purshase", "un achat"],
+["a purchase", "un achat"],
 ["BORIS", "acheter en ligne ramener au magasin"],
 ["seamless", "sans faille, harmonieux, homogène"],
 ["to give away", "donner, distribuer"],
