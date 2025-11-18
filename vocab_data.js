@@ -437,7 +437,7 @@ const ALL_VOCAB_DATA = {
 ["to attend a school", "fréquenter une école"],
 ["to display interest", "manifester de l'intérêt"],
 ["proficiency", "la compétence"],
-["shurt-order cook", "préposer aux petites commandes (cuisiner dans un fast-food)"],
+["short-order cook", "préposer aux petites commandes (cuisiner dans un fast-food)"],
 ["a valedictorian", "major de promotion"],
 ["a firm", "une société"],
 ["to fail", "échouer (en général)"],
