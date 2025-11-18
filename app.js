@@ -11,6 +11,7 @@ const masteredBtn = document.getElementById('masteredBtn');
 
 const masteredWordsList = document.getElementById('masteredWordsList');
 const resetMasteredBtn = document.getElementById('resetMasteredBtn');
+const resetChapterMasteredBtn = document.getElementById('resetChapterMasteredBtn');
 
 const flashcardModeBtn = document.getElementById('flashcardModeBtn');
 const flashcard2ModeBtn = document.getElementById('flashcard2ModeBtn');
@@ -1063,6 +1064,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     flashcard2LaterBtn.addEventListener('click', () => {
         closeFlashcard2Welcome();
+    });
+
+    resetChapterMasteredBtn.addEventListener('click', () => {
+        if (!currentChapterKey || !currentSubcategoryKey) {
+            displayAlert("Veuillez d'abord sélectionner un chapitre.", varCss.colorIncorrect);
+            return;
+        }
+
+        if (confirm(`Êtes-vous sûr de vouloir réinitialiser les mots maîtrisés pour le chapitre actuel ?`)) {
+            const chapter = ALL_VOCAB_DATA[currentChapterKey];
+            const subcategory = chapter.subcategories[currentSubcategoryKey];
+            const fullVocabForChapter = subcategory.data;
+
+            fullVocabForChapter.forEach(pair => {
+                masteredWords.delete(pair[0]);
+            });
+
+            saveMasteredWords();
+            updateMasteredWordsDisplay();
+            updateProgressStatistics();
+            displayAlert(`Les mots maîtrisés pour le chapitre actuel ont été réinitialisés.`, varCss.colorPrimary);
+
+            if (currentChapterKey && currentSubcategoryKey) {
+                changeVocabulary(currentChapterKey, currentSubcategoryKey);
+            }
+        }
     });
 
     generateChapterButtons();
