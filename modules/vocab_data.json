@@ -1,13 +1,13 @@
 {
-    'liste_voc_1': {
-        title: 'Liste voc 1',
-        selectorId: 'listeVoc1Btn',
-        subcategories: {
-            'full_list': {
-                name: 'Vocabulaire Complet',
-                color: '#BB86FC',
-                alert: null,
-                data: [
+    "liste_voc_1": {
+        "title": 'Liste voc 1',
+        "selectorId": 'listeVoc1Btn',
+        "subcategories": {
+            "full_list": {
+                "name": 'Vocabulaire Complet',
+                "color": '#BB86FC',
+                "alert": null,
+                "data": [
     ["A wine merchant", "Un marchand de vin"],
     ["A poulterer", "Un volailler"],
     ["A fishmonger", "Un poissonnier"],
@@ -222,15 +222,15 @@
             }
         }
     },
-    'voc_note': {
-        title: 'voc → note',
-        selectorId: 'vocNoteBtn',
-        subcategories: {
-            'full_list': {
-                name: 'Vocabulaire Complet',
-                color: '#4CAF50',
-                alert: null,
-                data: [
+    "voc_note": {
+        "title": 'voc → note',
+        "selectorId": 'vocNoteBtn',
+        "subcategories": {
+            "full_list": {
+                "name": 'Vocabulaire Complet',
+                "color": '#4CAF50',
+                "alert": null,
+                "data": [
     ["to mow the lawn", "tondre la pelouse"],
     ["a mower", "la tondeuse"],
     ["grocery bagger", "personne qui emballe les achats à l'épicerie"],
@@ -358,15 +358,15 @@
             }
         }
     },
-    'unit_1': {
-        title: 'Unit 1',
-        selectorId: 'unit1Btn',
-        subcategories: {
-            'full_list': {
-                name: 'Vocabulaire Complet',
-                color: '#3F51B5',
-                alert: null,
-                data: [
+    "unit_1": {
+        "title": 'Unit 1',
+        "selectorId": 'unit1Btn',
+        "subcategories": {
+            "full_list": {
+                "name": 'Vocabulaire Complet',
+                "color": '#3F51B5',
+                "alert": null,
+                "data": [
                     ["the behaviour", "le comportement"],
 ["a marketer", "un distributeur, un négociant, un annonceur"],
 ["a Customer", "un client (magasin,...)"],
@@ -539,4 +539,5 @@
         }
     }
 };
+
 
