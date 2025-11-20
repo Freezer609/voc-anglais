@@ -1,6 +1,5 @@
 
-import { ALL_VOCAB_DATA, masteredWords, currentChapterKey, currentSubcategoryKey, chapterAlert, setVocab, setChapterAlert } from './state.js';
-import { startFlashcardGame } from './flashcard.js';
+import { ALL_VOCAB_DATA, masteredWords, currentChapterKey, currentSubcategoryKey, chapterAlert, vocab, setVocab, setCurrentChapterKey, setCurrentSubcategoryKey, setChapterAlert } from './state.js';
 
 const allContainers = [
     document.getElementById('flashcardGameContainer'),
@@ -148,7 +147,9 @@ export function openCategoryModal(chapterKey, chapter) {
         button.style.backgroundColor = subcategory.color;
         button.style.color = '#FFFFFF';
         button.addEventListener('click', () => {
-            changeVocabulary(chapterKey, subKey);
+            const event = new CustomEvent('vocabularyChange', { detail: { chapterKey, subKey } });
+            document.dispatchEvent(event);
+            categoryModal.classList.remove('is-open');
         });
         modalButtons.appendChild(button);
     });
@@ -184,7 +185,6 @@ export function changeVocabulary(chapterKey, subcategoryKey) {
 
     generateList();
     updateProgressStatistics();
-    startFlashcardGame();
 }
 
 function generateList() {
