@@ -12,6 +12,7 @@ export const varCss = {
     colorText: getComputedStyle(document.documentElement).getPropertyValue('--color-text').trim()
 };
 
+export let ALL_VOCAB_DATA = null;
 export let vocab = [];
 export let currentChapterKey = null;
 export let currentSubcategoryKey = null;
@@ -20,6 +21,10 @@ export let chosenWord = '';
 export let shuffledVocab = [];
 export let currentCardIndex = 0;
 export let masteredWords = loadMasteredWords();
+
+export function setAllVocabData(data) {
+    ALL_VOCAB_DATA = data;
+}
 
 export function setVocab(newVocab) {
     vocab = newVocab;

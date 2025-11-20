@@ -1,7 +1,7 @@
 
 import { vocab, varCss } from './state.js';
 import { shuffleArray, onEnterPress } from './utils.js';
-import { showGameContainer, hideAlert, trackEvent } from './main.js';
+import { showGameContainer, hideAlert } from './ui.js';
 
 const scrambleWordDiv = document.getElementById('scrambleWord');
 const scrambleClueDiv = document.getElementById('scrambleClue');

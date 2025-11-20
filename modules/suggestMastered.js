@@ -1,6 +1,6 @@
 
 import { masteredWords, saveMasteredWords, varCss } from './state.js';
-import { updateMasteredWordsDisplay, updateProgressStatistics, displayAlert } from './main.js';
+import { updateMasteredWordsDisplay, updateProgressStatistics, displayAlert } from './ui.js';
 
 let consecutiveKnownCounts = {};
 let wordToSuggest = '';

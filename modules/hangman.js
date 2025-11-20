@@ -1,7 +1,7 @@
 
 import { vocab, varCss } from './state.js';
 import { shuffleArray } from './utils.js';
-import { showGameContainer, hideAlert, trackEvent, displayAlert } from './main.js';
+import { showGameContainer, hideAlert, displayAlert } from './ui.js';
 
 const hangmanWordDiv = document.getElementById('hangmanWord');
 const hangmanLettersDiv = document.getElementById('hangmanLetters');

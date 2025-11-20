@@ -1,7 +1,7 @@
 
 import { vocab, varCss } from './state.js';
 import { shuffleArray } from './utils.js';
-import { showGameContainer, hideAlert, trackEvent, displayAlert } from './main.js';
+import { showGameContainer, hideAlert, displayAlert } from './ui.js';
 
 const matchScoreSpan = document.getElementById('matchScore');
 const wordsColumn = document.getElementById('wordsColumn');
