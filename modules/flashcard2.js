@@ -1,3 +1,8 @@
+
+import { vocab, shuffledVocab, currentCardIndex, masteredWords, varCss, saveMasteredWords, setShuffledVocab, setCurrentCardIndex } from './state.js';
+import { shuffleArray } from './utils.js';
+import { showGameContainer, hideAlert, trackEvent, displayAlert, updateMasteredWordsDisplay, updateProgressStatistics, checkSuggestMastered } from './main.js';
+
 const flashcard2 = document.getElementById('flashcard2');
 const flashcard2Front = document.getElementById('flashcard2Front');
 const flashcard2Back = document.getElementById('flashcard2Back');
@@ -6,8 +11,11 @@ const flashcard2FeedbackButtons = document.getElementById('flashcard2FeedbackBut
 const flashcard2KnewItBtn = document.getElementById('flashcard2KnewItBtn');
 const flashcard2MasteredBtn = document.getElementById('flashcard2MasteredBtn');
 const flashcard2DidntKnowBtn = document.getElementById('flashcard2DidntKnowBtn');
+const flashcard2GameContainer = document.getElementById('flashcard2GameContainer');
+const flashcard2ModeBtn = document.getElementById('flashcard2ModeBtn');
 
-function startFlashcard2Mode() {
+
+export function startFlashcard2Mode() {
     if (localStorage.getItem('hideFlashcard2Welcome') !== 'true') {
         const flashcard2WelcomeModal = document.getElementById('flashcard2-welcome-modal');
         flashcard2WelcomeModal.classList.add('is-open');
@@ -28,8 +36,8 @@ function startFlashcard2Mode() {
         return;
     }
 
-    shuffledVocab = shuffleArray([...unmasteredVocab]);
-    currentCardIndex = 0;
+    setShuffledVocab(shuffleArray([...unmasteredVocab]));
+    setCurrentCardIndex(0);
     displayFlashcard2Card();
 }
 
@@ -73,27 +81,25 @@ function handleFlashcard2Feedback(known) {
         updateProgressStatistics();
     } else {
         consecutiveKnownCounts[currentWord] = 0;
-        // If not known, reinsert the word later in the shuffled list
         const wordToReinsert = shuffledVocab.splice(currentCardIndex, 1)[0];
         let insertIndex = currentCardIndex + Math.floor(Math.random() * (shuffledVocab.length - currentCardIndex)) + 1;
         if (insertIndex > shuffledVocab.length) insertIndex = shuffledVocab.length;
         shuffledVocab.splice(insertIndex, 0, wordToReinsert);
-        currentCardIndex--; // Stay on the same index for the next card
+        setCurrentCardIndex(currentCardIndex--);
     }
 
     flashcard2.classList.remove('flipped');
     flashcard2FeedbackButtons.style.display = 'none';
 
     setTimeout(() => {
-        currentCardIndex++;
+        setCurrentCardIndex(currentCardIndex++);
         if (currentCardIndex < shuffledVocab.length) {
             displayFlashcard2Card();
         } else {
-            // If all words in current shuffledVocab are reviewed, filter and restart
             const unmasteredRemaining = vocab.filter(pair => !masteredWords.has(pair[0]));
             if (unmasteredRemaining.length > 0) {
-                shuffledVocab = shuffleArray([...unmasteredRemaining]);
-                currentCardIndex = 0;
+                setShuffledVocab(shuffleArray([...unmasteredRemaining]));
+                setCurrentCardIndex(0);
                 displayAlert(`Nouveau tour de révision avec ${shuffledVocab.length} mots restants!`, varCss.colorPrimary);
                 displayFlashcard2Card();
             } else {
@@ -116,18 +122,17 @@ flashcard2MasteredBtn.addEventListener('click', () => {
     updateProgressStatistics();
     displayAlert(`'${currentWord}' a été marqué comme maîtrisé et ne réapparaîtra plus.`, varCss.colorPrimary);
 
-    // Proceed to the next card, similar to handleFlashcard2Feedback
     flashcard2.classList.remove('flipped');
     flashcard2FeedbackButtons.style.display = 'none';
     setTimeout(() => {
-        currentCardIndex++;
+        setCurrentCardIndex(currentCardIndex++);
         if (currentCardIndex < shuffledVocab.length) {
             displayFlashcard2Card();
         } else {
             const unmasteredRemaining = vocab.filter(pair => !masteredWords.has(pair[0]));
             if (unmasteredRemaining.length > 0) {
-                shuffledVocab = shuffleArray([...unmasteredRemaining]);
-                currentCardIndex = 0;
+                setShuffledVocab(shuffleArray([...unmasteredRemaining]));
+                setCurrentCardIndex(0);
                 displayAlert(`Nouveau tour de révision avec ${shuffledVocab.length} mots restants!`, varCss.colorPrimary);
                 displayFlashcard2Card();
             } else {

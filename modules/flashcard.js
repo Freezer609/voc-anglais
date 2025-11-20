@@ -1,3 +1,8 @@
+
+import { vocab, shuffledVocab, currentCardIndex, masteredWords, varCss, saveMasteredWords, setShuffledVocab, setCurrentCardIndex } from './state.js';
+import { shuffleArray } from './utils.js';
+import { showGameContainer, hideAlert, trackEvent, displayAlert, updateProgressStatistics, updateMasteredWordsDisplay, checkSuggestMastered } from './main.js';
+
 const flashcard = document.getElementById('flashcard');
 const frontFace = document.getElementById('front');
 const backFace = document.getElementById('back');
@@ -6,8 +11,11 @@ const feedbackButtons = document.getElementById('feedbackButtons');
 const knewItBtn = document.getElementById('knewItBtn');
 const didntKnowBtn = document.getElementById('didntKnowBtn');
 const masteredBtn = document.getElementById('masteredBtn');
+const flashcardGameContainer = document.getElementById('flashcardGameContainer');
+const flashcardModeBtn = document.getElementById('flashcardModeBtn');
 
-function startFlashcardGame() {
+
+export function startFlashcardGame() {
     showGameContainer(flashcardGameContainer, flashcardModeBtn);
     trackEvent('mode-cartes-started');
     flashcard.classList.remove('flipped');
@@ -20,8 +28,8 @@ function startFlashcardGame() {
          return;
     }
 
-    shuffledVocab = shuffleArray([...vocab]);
-    currentCardIndex = 0;
+    setShuffledVocab(shuffleArray([...vocab]));
+    setCurrentCardIndex(0);
     displayCard();
 }
 
@@ -77,20 +85,20 @@ function handleFeedback(known) {
         let insertIndex = currentCardIndex + Math.floor(Math.random() * (shuffledVocab.length - currentCardIndex)) + 1;
         if (insertIndex > shuffledVocab.length) insertIndex = shuffledVocab.length;
         shuffledVocab.splice(insertIndex, 0, wordToReinsert);
-        currentCardIndex--;
+        setCurrentCardIndex(currentCardIndex--);
     }
 
     flashcard.classList.remove('flipped');
     feedbackButtons.style.display = 'none';
 
     setTimeout(() => {
-        currentCardIndex++;
+        setCurrentCardIndex(currentCardIndex++);
         if (currentCardIndex < shuffledVocab.length) {
             displayCard();
         } else {
-            shuffledVocab = shuffledVocab.filter(pair => !masteredWords.has(pair[0]));
+            setShuffledVocab(shuffledVocab.filter(pair => !masteredWords.has(pair[0])));
             if (shuffledVocab.length > 0) {
-                currentCardIndex = 0;
+                setCurrentCardIndex(0);
                 shuffleArray(shuffledVocab);
                 displayAlert(`Nouveau tour avec ${shuffledVocab.length} mots restants!`, varCss.colorPrimary);
                 displayCard();
@@ -111,18 +119,16 @@ function handleMasteredWord() {
     updateProgressStatistics();
     displayAlert(`'${currentWord}' a été marqué comme maîtrisé et ne réapparaîtra plus.`, varCss.colorPrimary);
 
-    // Proceed to the next card, similar to handleFeedback
     flashcard.classList.remove('flipped');
     feedbackButtons.style.display = 'none';
     setTimeout(() => {
-        currentCardIndex++;
+        setCurrentCardIndex(currentCardIndex++);
         if (currentCardIndex < shuffledVocab.length) {
             displayCard();
         } else {
-            // If all words in current shuffledVocab are mastered or reviewed, filter and restart
-            shuffledVocab = shuffledVocab.filter(pair => !masteredWords.has(pair[0]));
+            setShuffledVocab(shuffledVocab.filter(pair => !masteredWords.has(pair[0])));
             if (shuffledVocab.length > 0) {
-                currentCardIndex = 0;
+                setCurrentCardIndex(0);
                 shuffleArray(shuffledVocab);
                 displayAlert(`Nouveau tour avec ${shuffledVocab.length} mots restants!`, varCss.colorPrimary);
                 displayCard();

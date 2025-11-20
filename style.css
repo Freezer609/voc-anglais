@@ -1332,3 +1332,31 @@ details[open] summary::after {
     background: #666;
 }
 
+#introOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--color-background);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease-out;
+}
+
+#introLogo {
+    width: 80%;
+    max-width: 400px;
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 1.5s ease-in-out, transform 1.5s ease-in-out;
+}
+
+#introLogo.fade-in {
+    opacity: 1;
+    transform: scale(1);
+}
+
+

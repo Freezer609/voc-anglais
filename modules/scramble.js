@@ -1,9 +1,17 @@
+
+import { vocab, varCss } from './state.js';
+import { shuffleArray, onEnterPress } from './utils.js';
+import { showGameContainer, hideAlert, trackEvent } from './main.js';
+
 const scrambleWordDiv = document.getElementById('scrambleWord');
 const scrambleClueDiv = document.getElementById('scrambleClue');
 const scrambleInput = document.getElementById('scrambleInput');
 const scrambleCheckBtn = document.getElementById('scrambleCheckBtn');
 const scrambleFeedbackDiv = document.getElementById('scrambleFeedback');
 const scrambleNextBtn = document.getElementById('scrambleNextBtn');
+const scrambleGameContainer = document.getElementById('scrambleGameContainer');
+const scrambleModeBtn = document.getElementById('scrambleModeBtn');
+
 
 let currentScrambleWord = '';
 
@@ -16,7 +24,7 @@ function scrambleWord(word) {
     return letters.join('');
 }
 
-function startScrambleGame() {
+export function startScrambleGame() {
     showGameContainer(scrambleGameContainer, scrambleModeBtn);
     trackEvent('mode-scramble-started');
     if (vocab.length === 0) {
@@ -64,13 +72,10 @@ function checkScrambleAnswer() {
 scrambleCheckBtn.addEventListener('click', checkScrambleAnswer);
 scrambleNextBtn.addEventListener('click', startScrambleGame);
 
-scrambleInput.addEventListener('keydown', function(event) {
-    if (event.key === 'Enter') {
-        event.preventDefault();
-        if (scrambleNextBtn.style.display !== 'none') {
-            scrambleNextBtn.click();
-        } else {
-            scrambleCheckBtn.click();
-        }
+onEnterPress(scrambleInput, () => {
+    if (scrambleNextBtn.style.display !== 'none') {
+        scrambleNextBtn.click();
+    } else {
+        scrambleCheckBtn.click();
     }
 });

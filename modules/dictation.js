@@ -1,13 +1,20 @@
+
+import { vocab, varCss } from './state.js';
+import { shuffleArray, levenshtein, onEnterPress } from './utils.js';
+import { showGameContainer, hideAlert, trackEvent } from './main.js'; // Assuming these will be in main.js
+
 const dictationClueDiv = document.getElementById('dictationClue');
 const dictationInput = document.getElementById('dictationInput');
 const dictationCheckBtn = document.getElementById('dictationCheckBtn');
 const dictationFeedbackDiv = document.getElementById('dictationFeedback');
 const dictationNextBtn = document.getElementById('dictationNextBtn');
+const dictationGameContainer = document.getElementById('dictationGameContainer');
+const dictationModeBtn = document.getElementById('dictationModeBtn');
 
 let currentDictationClue = '';
 let currentDictationAnswers = [];
 
-function startDictationGame() {
+export function startDictationGame() {
     showGameContainer(dictationGameContainer, dictationModeBtn);
     trackEvent('mode-dictation-started');
      if (vocab.length === 0) {
@@ -79,13 +86,10 @@ function checkDictationAnswer() {
 dictationCheckBtn.addEventListener('click', checkDictationAnswer);
 dictationNextBtn.addEventListener('click', startDictationGame);
 
-dictationInput.addEventListener('keydown', function(event) {
-    if (event.key === 'Enter') {
-        event.preventDefault();
-        if (dictationNextBtn.style.display !== 'none') {
-            dictationNextBtn.click();
-        } else {
-            dictationCheckBtn.click();
-        }
+onEnterPress(dictationInput, () => {
+    if (dictationNextBtn.style.display !== 'none') {
+        dictationNextBtn.click();
+    } else {
+        dictationCheckBtn.click();
     }
 });

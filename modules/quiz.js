@@ -1,12 +1,19 @@
+
+import { vocab, shuffledVocab, varCss, setShuffledVocab } from './state.js';
+import { shuffleArray } from './utils.js';
+import { showGameContainer, hideAlert, trackEvent, displayAlert } from './main.js';
+
 const quizQuestion = document.getElementById('quizQuestion');
 const quizOptions = document.getElementById('quizOptions');
 const quizScore = document.getElementById('quizScore');
+const quizGameContainer = document.getElementById('quizGameContainer');
+const quizModeBtn = document.getElementById('quizModeBtn');
 
 let currentQuizQuestionIndex = 0;
 let quizQuestions = [];
 let score = { correct: 0, total: 0 };
 
-function startQuizGame() {
+export function startQuizGame() {
     showGameContainer(quizGameContainer, quizModeBtn);
     trackEvent('mode-quiz-started');
     if (vocab.length === 0) {
@@ -16,7 +23,7 @@ function startQuizGame() {
         return;
     }
 
-    shuffledVocab = shuffleArray([...vocab]);
+    setShuffledVocab(shuffleArray([...vocab]));
     quizQuestions = generateQuizQuestions();
     currentQuizQuestionIndex = 0;
     score = { correct: 0, total: 0 };
@@ -79,12 +86,12 @@ function checkQuizAnswer(button, selectedAnswer, correctAnswer) {
         }
     });
 
-                            if (selectedAnswer === correctAnswer) {
-                score.correct++;
-                displayAlert('Correct!', varCss.colorCorrect);
-            } else {
-                displayAlert(`Faux. La bonne réponse était : ${correctAnswer}`, varCss.colorIncorrect);
-            }
+    if (selectedAnswer === correctAnswer) {
+        score.correct++;
+        displayAlert('Correct!', varCss.colorCorrect);
+    } else {
+        displayAlert(`Faux. La bonne réponse était : ${correctAnswer}`, varCss.colorIncorrect);
+    }
     
     updateQuizScore();
     

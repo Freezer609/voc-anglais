@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="introOverlay">
+        <img src="intro/logo freezer-.png" alt="Logo" id="introLogo">
+        <audio id="introSound" src="intro/menu-open-sound-effect-432999.mp3"></audio>
+    </div>
     <div class="container">
         <h1 id="mainTitle">Vocabulaire Anglais</h1>
         <button id="adminPanelBtn" style="display: none; margin-top: 10px;" class="reset-btn">Panneau Admin</button>
@@ -176,16 +180,7 @@
         </div>
     </div>
 
-    <script src="vocab_data.js"></script>
-    <script src="suggestMastered.js"></script>
-    <script src="quiz.js"></script>
-    <script src="hangman.js"></script>
-    <script src="scramble.js"></script>
-    <script src="dictation.js"></script>
-    <script src="match.js"></script>
-    <script src="flashcard2.js"></script>
-    <script src="flashcard.js"></script>
-    <script src="app.js"></script>
+    <script src="main.js" type="module"></script>
 
     <div id="flashcard2-welcome-modal" class="modal">
         <div class="modal-content">

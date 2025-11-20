@@ -1,7 +1,11 @@
+
+import { masteredWords, saveMasteredWords, varCss } from './state.js';
+import { updateMasteredWordsDisplay, updateProgressStatistics, displayAlert } from './main.js';
+
 let consecutiveKnownCounts = {};
 let wordToSuggest = '';
 
-document.addEventListener('DOMContentLoaded', () => {
+export function initializeSuggestMastered() {
     const suggestMasteredModal = document.getElementById('suggest-mastered-modal');
     const suggestMasteredDontShowAgain = document.getElementById('suggest-mastered-dont-show-again');
     const suggestMasteredYesBtn = document.getElementById('suggest-mastered-yes-btn');
@@ -27,12 +31,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         consecutiveKnownCounts[wordToSuggest] = 0;
     });
-});
+}
 
-function checkSuggestMastered(word) {
+export function checkSuggestMastered(word) {
     if (localStorage.getItem('hideSuggestMastered') !== 'true' && consecutiveKnownCounts[word] >= 3) {
         wordToSuggest = word;
         const suggestMasteredModal = document.getElementById('suggest-mastered-modal');
         suggestMasteredModal.classList.add('is-open');
     }
+}
+
+export function getConsecutiveKnownCounts() {
+    return consecutiveKnownCounts;
 }

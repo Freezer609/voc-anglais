@@ -1,3 +1,19 @@
+
+import { loadVocabData } from './modules/data.js';
+import { 
+    varCss, vocab, currentChapterKey, currentSubcategoryKey, masteredWords, 
+    setVocab, setCurrentChapterKey, setCurrentSubcategoryKey, setChapterAlert, saveMasteredWords 
+} from './modules/state.js';
+import { initializeSuggestMastered, checkSuggestMastered, getConsecutiveKnownCounts } from './modules/suggestMastered.js';
+
+import { startFlashcardGame } from './modules/flashcard.js';
+import { startFlashcard2Mode } from './modules/flashcard2.js';
+import { startQuizGame } from './modules/quiz.js';
+import { startHangGame } from './modules/hangman.js';
+import { startScrambleGame } from './modules/scramble.js';
+import { startDictationGame } from './modules/dictation.js';
+import { startMatchGame } from './modules/match.js';
+
 const container = document.querySelector('.container');
 const vocabularyList = document.getElementById('fullVocabularyList');
 
@@ -36,63 +52,16 @@ const totalWordsCountSpan = document.getElementById('totalWordsCount');
 const masteredWordsCountSpan = document.getElementById('masteredWordsCount');
 const progressPercentageSpan = document.getElementById('progressPercentage');
 
-const varCss = {
-    colorCorrect: getComputedStyle(document.documentElement).getPropertyValue('--color-correct').trim(),
-    colorIncorrect: getComputedStyle(document.documentElement).getPropertyValue('--color-incorrect').trim(),
-    colorPrimary: getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim(),
-    colorCard: getComputedStyle(document.documentElement).getPropertyValue('--color-card').trim(),
-    colorText: getComputedStyle(document.documentElement).getPropertyValue('--color-text').trim()
-};
+let ALL_VOCAB_DATA = null;
 
-let vocab = [];
-let currentChapterKey = null;
-let currentSubcategoryKey = null;
-let chapterAlert = null;
-let chosenWord = '';
-let shuffledVocab = [];
-let currentCardIndex = 0;
-let masteredWords = loadMasteredWords();
-
-function loadMasteredWords() {
-    const storedWords = localStorage.getItem('masteredWords_vocAnglais');
-    return storedWords ? new Set(JSON.parse(storedWords)) : new Set();
-}
-
-function saveMasteredWords() {
-    localStorage.setItem('masteredWords_vocAnglais', JSON.stringify(Array.from(masteredWords)));
-}
-
-function levenshtein(a, b) {
-    const matrix = Array(b.length + 1).fill(null).map(() => Array(a.length + 1).fill(null));
-
-    for (let i = 0; i <= a.length; i += 1) {
-        matrix[0][i] = i;
-    }
-
-    for (let j = 0; j <= b.length; j += 1) {
-        matrix[j][0] = j;
-    }
-
-    for (let j = 1; j <= b.length; j += 1) {
-        for (let i = 1; i <= a.length; i += 1) {
-            const indicator = a[i - 1] === b[j - 1] ? 0 : 1;
-            matrix[j][i] = Math.min(
-                matrix[j][i - 1] + 1, 
-                matrix[j - 1][i] + 1, 
-                matrix[j - 1][i - 1] + indicator,
-            );
-        }
-    }
-
-    return matrix[b.length][a.length];
-}
-
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
+export function showGameContainer(container, button) {
+    hideAllGameContainers();
+    container.style.display = 'flex';
+    button.classList.add('active');
+    setTimeout(() => {
+        container.classList.add('active-mode');
+        container.style.opacity = '1';
+    }, 50);
 }
 
 function hideAllGameContainers() {
@@ -104,27 +73,17 @@ function hideAllGameContainers() {
     allModeBtns.forEach(btn => btn.classList.remove('active'));
 }
 
-function showGameContainer(container, button) {
-    hideAllGameContainers();
-    container.style.display = 'flex';
-    button.classList.add('active');
-    setTimeout(() => {
-        container.classList.add('active-mode');
-        container.style.opacity = '1';
-    }, 50);
-}
-
-function displayAlert(message, color) {
+export function displayAlert(message, color) {
     alertTextP.textContent = message;
     alertMessageDiv.style.backgroundColor = color;
     alertMessageDiv.style.display = 'block';
 }
 
-function hideAlert() {
+export function hideAlert() {
     alertMessageDiv.style.display = 'none';
 }
 
-function updateProgressStatistics() {
+export function updateProgressStatistics() {
     let totalWordsInCurrentChapter = 0;
     if (currentChapterKey && currentSubcategoryKey && ALL_VOCAB_DATA[currentChapterKey] && ALL_VOCAB_DATA[currentChapterKey].subcategories[currentSubcategoryKey]) {
         totalWordsInCurrentChapter = ALL_VOCAB_DATA[currentChapterKey].subcategories[currentSubcategoryKey].data.length;
@@ -146,7 +105,7 @@ function updateProgressStatistics() {
     progressPercentageSpan.textContent = `${percentage}%`;
 }
 
-function updateMasteredWordsDisplay() {
+export function updateMasteredWordsDisplay() {
     masteredWordsList.innerHTML = '';
     if (masteredWords.size === 0) {
         masteredWordsList.innerHTML = '<p class="no-mastered-words-message">Aucun mot maîtrisé pour le moment.</p>';
@@ -169,7 +128,6 @@ function updateMasteredWordsDisplay() {
             updateMasteredWordsDisplay();
             updateProgressStatistics();
             displayAlert(`'${wordToRemove}' a été retiré des mots maîtrisés.`, varCss.colorPrimary);
-            // Restart current game mode to reflect changes
             if (currentChapterKey && currentSubcategoryKey) {
                 changeVocabulary(currentChapterKey, currentSubcategoryKey);
             }
@@ -179,7 +137,7 @@ function updateMasteredWordsDisplay() {
 
 function generateChapterButtons() {
     chapterSelectorDiv.innerHTML = '';
-    if (typeof ALL_VOCAB_DATA === 'undefined') return;
+    if (!ALL_VOCAB_DATA) return;
 
     Object.entries(ALL_VOCAB_DATA).forEach(([key, chapter]) => {
         const button = document.createElement('button');
@@ -214,22 +172,22 @@ function openCategoryModal(chapterKey, chapter) {
 
 function changeVocabulary(chapterKey, subcategoryKey) {
     hideAllGameContainers();
-    currentChapterKey = chapterKey;
-    currentSubcategoryKey = subcategoryKey;
-    categoryModal.classList.remove('is-open'); // Moved here
+    setCurrentChapterKey(chapterKey);
+    setCurrentSubcategoryKey(subcategoryKey);
+    categoryModal.classList.remove('is-open');
     
     trackEvent(`section-${chapterKey}-${subcategoryKey}-selected`);
     
-    if (typeof ALL_VOCAB_DATA === 'undefined') {
-        displayAlert("Erreur: Fichier de données (vocab_data.js) manquant ou incorrect.", varCss.colorIncorrect);
+    if (!ALL_VOCAB_DATA) {
+        displayAlert("Erreur: Fichier de données (vocab_data.json) manquant ou incorrect.", varCss.colorIncorrect);
         return;
     }
 
     const chapter = ALL_VOCAB_DATA[chapterKey];
     const subcategory = chapter.subcategories[subcategoryKey];
     const fullVocab = subcategory.data;
-    vocab = fullVocab.filter(pair => !masteredWords.has(pair[0]));
-    chapterAlert = subcategory.alert;
+    setVocab(fullVocab.filter(pair => !masteredWords.has(pair[0])));
+    setChapterAlert(subcategory.alert);
 
     listTitleSummary.textContent = `${chapter.title} - ${subcategory.name}`;
 
@@ -253,29 +211,44 @@ function generateList() {
     });
 }
 
-flashcardModeBtn.addEventListener('click', startFlashcardGame);
-quizModeBtn.addEventListener('click', startQuizGame);
-hangmanModeBtn.addEventListener('click', startHangGame);
-scrambleModeBtn.addEventListener('click', startScrambleGame);
-dictationModeBtn.addEventListener('click', startDictationGame);
-matchModeBtn.addEventListener('click', startMatchGame);
-flashcard2ModeBtn.addEventListener('click', startFlashcard2Mode);
+export function trackEvent(eventName) {
+    // console.log(eventName);
+}
 
-resetMasteredBtn.addEventListener('click', () => {
-    if (confirm("Êtes-vous sûr de vouloir réinitialiser tous les mots maîtrisés ? Ils réapparaîtront dans les jeux.")) {
-        masteredWords.clear();
-        saveMasteredWords();
-        updateMasteredWordsDisplay();
-        updateProgressStatistics();
-        displayAlert("Tous les mots maîtrisés ont été réinitialisés.", varCss.colorPrimary);
-        // Restart current game mode to reflect changes
-        if (currentChapterKey && currentSubcategoryKey) {
-            changeVocabulary(currentChapterKey, currentSubcategoryKey);
+
+const introOverlay = document.getElementById('introOverlay');
+const introLogo = document.getElementById('introLogo');
+const introSound = document.getElementById('introSound');
+
+async function runApp() {
+    ALL_VOCAB_DATA = await loadVocabData();
+    generateChapterButtons();
+    hideAlert();
+    updateMasteredWordsDisplay();
+    updateProgressStatistics();
+    initializeSuggestMastered();
+
+    flashcardModeBtn.addEventListener('click', startFlashcardGame);
+    quizModeBtn.addEventListener('click', startQuizGame);
+    hangmanModeBtn.addEventListener('click', startHangGame);
+    scrambleModeBtn.addEventListener('click', startScrambleGame);
+    dictationModeBtn.addEventListener('click', startDictationGame);
+    matchModeBtn.addEventListener('click', startMatchGame);
+    flashcard2ModeBtn.addEventListener('click', startFlashcard2Mode);
+
+    resetMasteredBtn.addEventListener('click', () => {
+        if (confirm("Êtes-vous sûr de vouloir réinitialiser tous les mots maîtrisés ? Ils réapparaîtront dans les jeux.")) {
+            masteredWords.clear();
+            saveMasteredWords();
+            updateMasteredWordsDisplay();
+            updateProgressStatistics();
+            displayAlert("Tous les mots maîtrisés ont été réinitialisés.", varCss.colorPrimary);
+            if (currentChapterKey && currentSubcategoryKey) {
+                changeVocabulary(currentChapterKey, currentSubcategoryKey);
+            }
         }
-    }
-});
+    });
 
-document.addEventListener('DOMContentLoaded', () => {
     const flashcard2WelcomeModal = document.getElementById('flashcard2-welcome-modal');
     const flashcard2DontShowAgain = document.getElementById('flashcard2-dont-show-again');
     const flashcard2GoBtn = document.getElementById('flashcard2-go-btn');
@@ -323,19 +296,80 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    generateChapterButtons();
-    hideAlert();
-    updateMasteredWordsDisplay();
-    updateProgressStatistics();
-    
     const frontFace = document.getElementById('front');
     if (frontFace) {
         frontFace.textContent = "Sélectionnez un chapitre ci-dessus";
         const backFace = document.getElementById('back');
         backFace.textContent = "Puis une section pour commencer à jouer.";
     }
-});
 
-function trackEvent(eventName) {
+    function reviewintro() {
+        const introOverlay = document.getElementById('introOverlay');
+        const introLogo = document.getElementById('introLogo');
+        const introSound = document.getElementById('introSound');
 
+        introOverlay.style.display = 'flex';
+        introOverlay.style.opacity = '1';
+        introLogo.classList.remove('fade-in');
+
+        void introLogo.offsetWidth;
+
+        introSound.play().catch(error => console.error("Audio play failed:", error));
+        introLogo.classList.add('fade-in');
+
+        setTimeout(() => {
+            introOverlay.style.opacity = '0';
+            setTimeout(() => {
+                introOverlay.style.display = 'none';
+            }, 500);
+        }, 2500);
+    }
+
+    window.reviewintro = reviewintro;
+
+    console.log("%cBienvenue, développeur !","color: #BB86FC; font-size: 20px; font-weight: bold;");
+    console.log("Une commande spéciale est disponible : tapez %creviewintro()%c pour revoir l'animation d'introduction.", "color: #03DAC6; font-family: monospace;", "");
 }
+
+function handleIntro() {
+    if (localStorage.getItem('introShown') === 'true') {
+        introOverlay.style.display = 'none';
+        runApp();
+        return;
+    }
+
+    // Use a user interaction to play the sound
+    const playIntro = () => {
+        document.removeEventListener('click', playIntro);
+        document.removeEventListener('keydown', playIntro);
+        
+        introSound.play().catch(error => console.error("Audio play failed:", error));
+        introLogo.classList.add('fade-in');
+
+        setTimeout(() => {
+            introOverlay.style.opacity = '0';
+            setTimeout(() => {
+                introOverlay.style.display = 'none';
+            }, 500);
+            localStorage.setItem('introShown', 'true');
+            runApp();
+        }, 2500);
+    };
+
+    document.addEventListener('click', playIntro);
+    document.addEventListener('keydown', playIntro);
+    
+    // Fallback in case the user doesn't interact
+    setTimeout(() => {
+        document.removeEventListener('click', playIntro);
+        document.removeEventListener('keydown', playIntro);
+        if (localStorage.getItem('introShown') !== 'true') {
+            introOverlay.style.display = 'none';
+            runApp();
+        }
+    }, 5000);
+}
+
+document.addEventListener('DOMContentLoaded', handleIntro);
+
+export { checkSuggestMastered, getConsecutiveKnownCounts };

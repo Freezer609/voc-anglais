@@ -1,4 +1,4 @@
-const ALL_VOCAB_DATA = {
+{
     'liste_voc_1': {
         title: 'Liste voc 1',
         selectorId: 'listeVoc1Btn',
@@ -539,3 +539,4 @@ const ALL_VOCAB_DATA = {
         }
     }
 };
+

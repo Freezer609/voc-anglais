@@ -1,7 +1,15 @@
+
+import { vocab, varCss } from './state.js';
+import { shuffleArray } from './utils.js';
+import { showGameContainer, hideAlert, trackEvent, displayAlert } from './main.js';
+
 const matchScoreSpan = document.getElementById('matchScore');
 const wordsColumn = document.getElementById('wordsColumn');
 const definitionsColumn = document.getElementById('definitionsColumn');
 const matchNextBtn = document.getElementById('matchNextBtn');
+const matchGameContainer = document.getElementById('matchGameContainer');
+const matchModeBtn = document.getElementById('matchModeBtn');
+
 
 let matchPairs = [];
 let matchedPairsCount = 0;
@@ -9,7 +17,7 @@ let selectedWordItem = null;
 let selectedDefItem = null;
 const MATCH_COUNT = 6;
 
-function startMatchGame() {
+export function startMatchGame() {
     showGameContainer(matchGameContainer, matchModeBtn);
     trackEvent('mode-match-started');
     if (vocab.length === 0) {

@@ -1,13 +1,21 @@
+
+import { vocab, varCss } from './state.js';
+import { shuffleArray } from './utils.js';
+import { showGameContainer, hideAlert, trackEvent, displayAlert } from './main.js';
+
 const hangmanWordDiv = document.getElementById('hangmanWord');
 const hangmanLettersDiv = document.getElementById('hangmanLetters');
 const hangmanParts = ["head", "body", "arm1", "arm2", "leg1", "leg2"];
+const hangmanGameContainer = document.getElementById('hangmanGameContainer');
+const hangmanModeBtn = document.getElementById('hangmanModeBtn');
+
 
 let hangmanWord = '';
 let guessedLetters = new Set();
 const maxErrors = hangmanParts.length;
 let errors = 0;
 
-function startHangGame() {
+export function startHangGame() {
     showGameContainer(hangmanGameContainer, hangmanModeBtn);
     trackEvent('mode-pendu-started');
      if (vocab.length === 0) {
