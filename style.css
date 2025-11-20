@@ -1359,4 +1359,28 @@ details[open] summary::after {
     transform: scale(1);
 }
 
+.replay-intro-container {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(187, 134, 252, 0.2);
+}
+
+#replayIntroBtn {
+    background: linear-gradient(135deg, #FFD600 0%, #FFAB00 100%);
+    color: #1a1a24;
+    border: none;
+    padding: 14px 30px;
+    font-size: 1.05em;
+    font-weight: 700;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 171, 0, 0.4);
+}
+
+#replayIntroBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(255, 171, 0, 0.6);
+}
+
 

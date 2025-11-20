@@ -131,6 +131,11 @@ async function runApp() {
         startFlashcardGame();
     });
 
+    const replayIntroBtn = document.getElementById('replayIntroBtn');
+    if(replayIntroBtn) {
+        replayIntroBtn.addEventListener('click', reviewintro);
+    }
+
     // --- Developer Console Commands ---
     function reviewintro() {
         introOverlay.style.display = 'flex';
