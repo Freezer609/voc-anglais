@@ -159,32 +159,23 @@ function handleIntro() {
         runApp();
         return;
     }
-    const playIntro = () => {
-        document.removeEventListener('click', playIntro);
-        document.removeEventListener('keydown', playIntro);
-        introSound.play().catch(error => console.error("Audio play failed:", error));
-        introLogo.classList.add('fade-in');
-        setTimeout(() => {
-            introOverlay.style.opacity = '0';
-            setTimeout(() => {
-                introOverlay.style.display = 'none';
-            }, 500);
-            localStorage.setItem('introShown', 'true');
-            runApp();
-        }, 2500);
-    };
-    document.addEventListener('click', playIntro);
-    document.addEventListener('keydown', playIntro);
-    
-    // Fallback if user does not interact
+
+    console.log("First visit detected. Playing intro.");
+
+    // Try to play the intro directly
+    introSound.play().catch(error => {
+        console.warn("Audio autoplay was prevented. This is expected in most browsers.", error);
+    });
+    introLogo.classList.add('fade-in');
+
     setTimeout(() => {
-        if (localStorage.getItem('introShown') !== 'true') {
-            document.removeEventListener('click', playIntro);
-            document.removeEventListener('keydown', playIntro);
+        introOverlay.style.opacity = '0';
+        setTimeout(() => {
             introOverlay.style.display = 'none';
-            runApp();
-        }
-    }, 5000);
+        }, 500); // This timeout should match the CSS transition time
+        localStorage.setItem('introShown', 'true');
+        runApp();
+    }, 2500); // Duration of the intro
 }
 
 // --- App Start ---
