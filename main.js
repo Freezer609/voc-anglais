@@ -36,6 +36,7 @@ const introSound = document.getElementById('introSound');
 // --- Main App Logic ---
 async function runApp() {
     setAllVocabData(await loadVocabData());
+    console.log('Vocab data loaded:', ALL_VOCAB_DATA);
     
     // Initialize UI and state
     generateChapterButtons();

@@ -6,7 +6,7 @@ export async function loadVocabData() {
   }
 
   try {
-    const response = await fetch('./modules/vocab_data.json');
+    const response = await fetch('modules/vocab_data.json');
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
