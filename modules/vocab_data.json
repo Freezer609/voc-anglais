@@ -1,11 +1,11 @@
 {
     "liste_voc_1": {
-        "title": 'Liste voc 1',
-        "selectorId": 'listeVoc1Btn',
+        "title": "Liste voc 1",
+        "selectorId": "listeVoc1Btn",
         "subcategories": {
             "full_list": {
-                "name": 'Vocabulaire Complet',
-                "color": '#BB86FC',
+                "name": "Vocabulaire Complet",
+                "color": "#BB86FC",
                 "alert": null,
                 "data": [
     ["A wine merchant", "Un marchand de vin"],
@@ -223,12 +223,12 @@
         }
     },
     "voc_note": {
-        "title": 'voc → note',
-        "selectorId": 'vocNoteBtn',
+        "title": "voc → note",
+        "selectorId": "vocNoteBtn",
         "subcategories": {
             "full_list": {
-                "name": 'Vocabulaire Complet',
-                "color": '#4CAF50',
+                "name": "Vocabulaire Complet",
+                "color": "#4CAF50",
                 "alert": null,
                 "data": [
     ["to mow the lawn", "tondre la pelouse"],
@@ -359,12 +359,12 @@
         }
     },
     "unit_1": {
-        "title": 'Unit 1',
-        "selectorId": 'unit1Btn',
+        "title": "Unit 1",
+        "selectorId": "unit1Btn",
         "subcategories": {
             "full_list": {
-                "name": 'Vocabulaire Complet',
-                "color": '#3F51B5',
+                "name": "Vocabulaire Complet",
+                "color": "#3F51B5",
                 "alert": null,
                 "data": [
                     ["the behaviour", "le comportement"],
@@ -538,6 +538,4 @@
             }
         }
     }
-};
-
-
+}

@@ -192,6 +192,3 @@ document.addEventListener('DOMContentLoaded', handleIntro);
 
 // --- Exports for other modules ---
 export { checkSuggestMastered, getConsecutiveKnownCounts };
-export function trackEvent(eventName) {
-    // console.log(`Event: ${eventName}`);
-}

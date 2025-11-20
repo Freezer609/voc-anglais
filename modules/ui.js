@@ -195,3 +195,7 @@ function generateList() {
         vocabularyList.appendChild(li);
     });
 }
+
+export function trackEvent(eventName) {
+    // console.log(`Event: ${eventName}`);
+}

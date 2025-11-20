@@ -1,7 +1,7 @@
 
 import { vocab, shuffledVocab, currentCardIndex, masteredWords, varCss, saveMasteredWords, setShuffledVocab, setCurrentCardIndex } from './state.js';
 import { shuffleArray } from './utils.js';
-import { showGameContainer, hideAlert, displayAlert, updateMasteredWordsDisplay, updateProgressStatistics } from './ui.js';
+import { showGameContainer, hideAlert, displayAlert, updateMasteredWordsDisplay, updateProgressStatistics, trackEvent } from './ui.js';
 import { checkSuggestMastered } from './suggestMastered.js';
 
 const flashcard2 = document.getElementById('flashcard2');

@@ -1,7 +1,7 @@
 
 import { vocab, varCss } from './state.js';
 import { shuffleArray, levenshtein, onEnterPress } from './utils.js';
-import { showGameContainer, hideAlert, displayAlert } from './ui.js';
+import { showGameContainer, hideAlert, displayAlert, trackEvent } from './ui.js';
 
 const dictationClueDiv = document.getElementById('dictationClue');
 const dictationInput = document.getElementById('dictationInput');
